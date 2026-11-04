@@ -34,7 +34,7 @@ Fallback for an image: the language's name, then what the site shows today (`pre
 
 ## Renamed images
 
-`renames.json` at the root maps every image from its old path to its new path: the top folder moved from `wychwood/` to `icons/`, and Turkish names became English. The old files stay on the CDN because deploys never delete, so old URLs keep working, and `/index.json` lists both until someone removes the old files by hand. The site shows only `icons/` (`ROOT` in `catalog.js`): other folders stay on the CDN and their direct URLs keep working. `docs.html` forwards to `/`. Names files use only the new paths.
+The top folder moved from `wychwood/` to `icons/`, and Turkish names became English. The old files stay on the CDN because deploys never delete, so old URLs keep working, and `/index.json` lists both until someone removes the old files by hand. The site shows only `icons/` (`ROOT` in `catalog.js`): other folders stay on the CDN and their direct URLs keep working. `docs.html` forwards to `/`. Names files use only the new paths.
 
 ### `names/languages.json`
 
