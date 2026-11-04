@@ -1,0 +1,85 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'wychwood/**'
+      - 'names/**'
+      - 'index.html'
+      - 'docs.html'
+      - 'catalog.js'
+      - 'catalog.css'
+      - 'deploy/publish.sh'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cdn-deploy
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.secrets.outputs.ready }}
+    steps:
+      - name: See whether the deploy secrets are set
+        id: secrets
+        env:
+          CDN_SSH_KEY: ${{ secrets.CDN_SSH_KEY }}
+          CDN_SSH_KNOWN_HOSTS: ${{ secrets.CDN_SSH_KNOWN_HOSTS }}
+          CDN_HOST: ${{ secrets.CDN_HOST }}
+        run: |
+          if [ -n "$CDN_SSH_KEY" ] && [ -n "$CDN_SSH_KNOWN_HOSTS" ] && [ -n "$CDN_HOST" ]; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+          else
+            echo '::notice::Deploy skipped: CDN_SSH_KEY, CDN_SSH_KNOWN_HOSTS and CDN_HOST are not all set.'
+            echo 'ready=false' >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: gate
+    if: needs.gate.outputs.ready == 'true' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CDN_BASE: https://cdn.tools.deniz.cyou
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Publish
+        env:
+          CDN_SSH_KEY: ${{ secrets.CDN_SSH_KEY }}
+          CDN_SSH_KNOWN_HOSTS: ${{ secrets.CDN_SSH_KNOWN_HOSTS }}
+          CDN_HOST: ${{ secrets.CDN_HOST }}
+        run: |
+          umask 077
+          export CDN_KEY_FILE="$RUNNER_TEMP/cdn_key" CDN_KNOWN_HOSTS_FILE="$RUNNER_TEMP/cdn_known_hosts"
+          trap 'rm -f "$CDN_KEY_FILE" "$CDN_KNOWN_HOSTS_FILE"' EXIT
+          printf '%s\n' "$CDN_SSH_KEY" > "$CDN_KEY_FILE"
+          printf '%s\n' "$CDN_SSH_KNOWN_HOSTS" > "$CDN_KNOWN_HOSTS_FILE"
+          bash deploy/publish.sh
+
+      - name: Check the published list
+        run: |
+          if ! curl -fsS --max-time 30 "$CDN_BASE/index.json" -o "$RUNNER_TEMP/index.json"; then
+            echo '::warning::Could not read the published index.json.'
+            exit 0
+          fi
+          git ls-files -z -- 'wychwood/*.webp' > "$RUNNER_TEMP/tracked"
+          python3 -I -c '
+          import json, sys
+          dirs = json.load(open(sys.argv[1], encoding="utf-8"))["dirs"]
+          listed = {d + "/" + f for d, files in dirs.items() for f in files}
+          tracked = [p for p in open(sys.argv[2], encoding="utf-8").read().split("\0") if p]
+          missing = [p for p in tracked if p not in listed]
+          print(f"{len(tracked) - len(missing)}/{len(tracked)} images are in the published list")
+          if missing:
+              print(f"::warning::{len(missing)} images are not in the published list, first: {missing[0]}")
+          ' "$RUNNER_TEMP/index.json" "$RUNNER_TEMP/tracked"
