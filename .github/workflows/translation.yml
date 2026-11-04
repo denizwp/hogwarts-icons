@@ -1,0 +1,90 @@
+name: Translation
+
+# The issue is data. Its text is read by translation.py from the event file and is never
+# placed in a command or an expression. Later steps use only values that script has checked.
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions: {}
+
+concurrency:
+  group: translation-${{ github.event.issue.number }}
+
+jobs:
+  translate:
+    if: >-
+      github.event.issue.state == 'open'
+      && contains(github.event.issue.labels.*.name, 'translation')
+      && (github.event.action != 'edited' || github.event.changes.body != null)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      MAX_OPEN_TRANSLATION_PRS: 30
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check the issue
+        id: check
+        run: python3 -I .github/scripts/translation.py --event "$GITHUB_EVENT_PATH" --out "$RUNNER_TEMP/translation"
+
+      - name: Reply with the problems
+        if: steps.check.outputs.status == 'invalid' || (steps.check.outputs.status == 'nochange' && github.event.action != 'edited')
+        env:
+          NUMBER: ${{ steps.check.outputs.number }}
+        run: gh issue comment "$NUMBER" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/translation/comment.md"
+
+      - name: Open or update the pull request
+        if: steps.check.outputs.status == 'ok'
+        env:
+          NUMBER: ${{ steps.check.outputs.number }}
+          TR_LANG: ${{ steps.check.outputs.lang }}
+        run: |
+          branch="translation/issue-$NUMBER"
+          reply() { gh issue comment "$NUMBER" --repo "$GITHUB_REPOSITORY" --body "$1"; }
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898283+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add -- "names/$TR_LANG.json"
+          git commit -q -m "feat: update $TR_LANG icon names"
+
+          same=false
+          if git ls-remote --exit-code origin "refs/heads/$branch" >/dev/null; then
+            git fetch -q --depth=1 origin "refs/heads/$branch"
+            if git diff --quiet FETCH_HEAD HEAD; then same=true; fi
+          fi
+
+          pr=$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$branch" --state open --json url --jq '.[0].url // ""')
+          if [ -z "$pr" ]; then
+            open=$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --limit 200 --json headRefName --jq '[.[] | select(.headRefName | startswith("translation/"))] | length')
+            if [ "$open" -ge "$MAX_OPEN_TRANSLATION_PRS" ]; then
+              reply 'The data is valid, but too many translations are waiting for review right now. Edit this issue later to try again.'
+              exit 0
+            fi
+          fi
+
+          if [ "$same" = false ]; then
+            git push -q --force origin "$branch"
+          fi
+
+          if [ -n "$pr" ]; then
+            if [ "$same" = false ]; then
+              reply "Updated the pull request: $pr"
+            fi
+            exit 0
+          fi
+
+          if pr=$(gh pr create --repo "$GITHUB_REPOSITORY" --base "$GITHUB_REF_NAME" --head "$branch" \
+            --title "feat: update $TR_LANG icon names" --body-file "$RUNNER_TEMP/translation/pr_body.md"); then
+            reply "Opened a pull request for review: $pr"
+          else
+            reply "The data is valid and is ready on branch \`$branch\`, but the pull request could not be opened automatically. The owner has been notified by this failed run."
+            exit 1
+          fi

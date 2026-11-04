@@ -1,0 +1,25 @@
+name: Icon name translation
+description: Submit translated icon names. The catalog site fills this in for you.
+title: "[translation] "
+labels: [translation]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A workflow reads the JSON below and opens a pull request for the owner to review. It replies here if something is wrong, and you can edit this issue to try again.
+  - type: textarea
+    id: payload
+    attributes:
+      label: Translation data
+      description: 'JSON with "lang" and "names". See docs/CONTRIBUTION-CONTRACT.md.'
+      placeholder: '{"lang": "tr", "names": {"wychwood/items/shop/wy_anahtar": "Anahtar"}}'
+      render: json
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Terms
+      options:
+        - label: I wrote these translations and they may be used on the terms in CONTRIBUTING.md.
+          required: true
