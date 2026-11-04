@@ -88,7 +88,7 @@ var URL_LIMIT = 8000;
 
 function issueUrl(body) {
   var base = REPO + '/issues/new?template=translation.yml&title=' +
-    encodeURIComponent('[translation] ' + body.lang);
+    encodeURIComponent('Translation: ' + languageName(body.lang));
   var full = base + '&payload=' + encodeURIComponent(JSON.stringify(body));
   return full.length <= URL_LIMIT ? { url: full, prefilled: true } : { url: base, prefilled: false };
 }

@@ -15,7 +15,7 @@ jobs:
   translate:
     if: >-
       github.event.issue.state == 'open'
-      && contains(github.event.issue.labels.*.name, 'translation')
+      && contains(github.event.issue.labels.*.name, 'Translation')
       && (github.event.action != 'edited' || github.event.changes.body != null)
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -81,8 +81,9 @@ jobs:
             exit 0
           fi
 
+          lang_name=$(python3 -I -c 'import json, os; code = os.environ["TR_LANG"]; print(json.load(open("names/languages.json", encoding="utf-8")).get(code, code))')
           if pr=$(gh pr create --repo "$GITHUB_REPOSITORY" --base "$GITHUB_REF_NAME" --head "$branch" \
-            --title "feat: update $TR_LANG icon names" --body-file "$RUNNER_TEMP/translation/pr_body.md"); then
+            --title "Translation: $lang_name" --body-file "$RUNNER_TEMP/translation/pr_body.md"); then
             reply "Opened a pull request for review: $pr"
           else
             reply "The data is valid and is ready on branch \`$branch\`, but the pull request could not be opened automatically. The owner has been notified by this failed run."
