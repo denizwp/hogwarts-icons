@@ -104,6 +104,9 @@ select:hover{border-color:var(--muted)}
 .menu-list:focus{outline:none}
 .menu-row{display:flex;align-items:center;gap:8px;min-height:32px;padding:5px 8px;border-radius:6px;font-size:13px;cursor:pointer}
 .menu-row.on{background:var(--line2)}
+.menu-action.first{margin-top:4px;position:relative}
+.menu-action.first::before{content:'';position:absolute;inset:-3px 0 auto;border-top:1px solid var(--line2)}
+.menu-plus{flex-shrink:0;width:20px;text-align:center;color:var(--muted);font-size:15px;line-height:1}
 .menu-row[aria-selected=true]{background:var(--accent2);color:var(--accent)}
 .menu-row[aria-selected=true].on{outline:1px solid var(--accent);outline-offset:-1px}
 .menu-list:focus-visible .menu-row.on{outline:2px solid var(--accent);outline-offset:-2px}

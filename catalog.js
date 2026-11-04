@@ -73,7 +73,7 @@
       translating: 'Translating into {lang}', progress: '{done} of {total} named ({pct})',
       draftsSaved: '{n} drafts saved in this browser', draftSaved: '1 draft saved in this browser',
       draftsVolatile: 'Drafts only in this tab: {n}. This browser is not saving them, so submit before you close it.',
-      onlyUntranslated: 'Untranslated only', newLanguage: 'Start a new language…', newLanguageLabel: 'Start a new language', submit: 'Submit', submitCount: 'Submit {n}', done: 'Done',
+      onlyUntranslated: 'Untranslated only', addLanguage: 'Add your language', otherLanguage: 'Another language…', newLanguage: 'Start a new language…', newLanguageLabel: 'Start a new language', submit: 'Submit', submitCount: 'Submit {n}', done: 'Done',
       notOpenBar: '{lang} is not open yet. You can draft here, and submitting needs the language added first.',
       folderName: 'Folder name', draftTag: 'draft', previewKey: 'Alt+Enter: large preview', nameFor: 'Name for {source}, {path}',
       errLong: 'Keep it to 120 characters or fewer.', errAngle: 'Remove < and >.', errEntity: 'Write the character itself instead of an HTML entity such as &amp;.', errUrl: 'Remove the web address (://).',
@@ -118,7 +118,7 @@
       translating: '{lang} çevirisi', progress: '{total} adın {done} tanesi hazır ({pct})',
       draftsSaved: '{n} taslak bu tarayıcıda kayıtlı', draftSaved: '1 taslak bu tarayıcıda kayıtlı',
       draftsVolatile: '{n} taslak yalnızca bu sekmede. Tarayıcı bunları kaydetmiyor, kapatmadan önce gönder.',
-      onlyUntranslated: 'Yalnızca çevrilmemişler', newLanguage: 'Yeni dil başlat…', newLanguageLabel: 'Yeni dil başlat', submit: 'Gönder', submitCount: '{n} ad gönder', done: 'Bitti',
+      onlyUntranslated: 'Yalnızca çevrilmemişler', addLanguage: 'Kendi dilini ekle', otherLanguage: 'Başka bir dil…', newLanguage: 'Yeni dil başlat…', newLanguageLabel: 'Yeni dil başlat', submit: 'Gönder', submitCount: '{n} ad gönder', done: 'Bitti',
       notOpenBar: '{lang} henüz açık değil. Burada taslak yazabilirsin, göndermek için önce dilin eklenmesi gerekir.',
       folderName: 'Klasör adı', draftTag: 'taslak', previewKey: 'Alt+Enter: büyük önizleme', nameFor: '{source} için ad, {path}',
       errLong: 'En fazla 120 karakter yaz.', errAngle: '< ve > işaretlerini çıkar.', errEntity: '&amp; gibi HTML kodu yerine karakterin kendisini yaz.', errUrl: 'Web adresini (://) çıkar.',
@@ -155,7 +155,7 @@
       openTab: 'In neuem Tab öffnen', prev: 'Zurück', next: 'Weiter', close: 'Schließen', untranslated: 'nicht übersetzt', coverage: '{lang}: {pct} übersetzt', notOpenTag: 'noch nicht offen',
       translate: 'Übersetzen', addIcon: 'Icon hinzufügen', footShort: 'Inoffizielles Fanprojekt', footRights: 'Bildrechte', footContributing: 'Mitwirken', translating: 'Übersetzung: {lang}', progress: '{done} von {total} benannt ({pct})',
       draftsSaved: '{n} Entwürfe in diesem Browser gespeichert', draftSaved: '1 Entwurf in diesem Browser gespeichert', onlyUntranslated: 'Nur unübersetzte',
-      newLanguage: 'Neue Sprache beginnen…', newLanguageLabel: 'Neue Sprache beginnen', submit: 'Senden', submitCount: '{n} senden', done: 'Fertig', folderName: 'Ordnername', draftTag: 'Entwurf'
+      addLanguage: 'Deine Sprache hinzufügen', newLanguage: 'Neue Sprache beginnen…', newLanguageLabel: 'Neue Sprache beginnen', submit: 'Senden', submitCount: '{n} senden', done: 'Fertig', folderName: 'Ordnername', draftTag: 'Entwurf'
     },
     fr: {
       title: 'Catalogue d’icônes', search: 'Rechercher des icônes…', searchLabel: 'Rechercher des icônes', folders: 'Dossiers', all: 'Tout', icon: '{n} icône', icons: '{n} icônes',
@@ -163,7 +163,7 @@
       openTab: 'Ouvrir dans un nouvel onglet', prev: 'Précédent', next: 'Suivant', close: 'Fermer', untranslated: 'non traduit', coverage: '{lang} : {pct} traduit', notOpenTag: 'pas encore ouverte',
       translate: 'Traduire', addIcon: 'Ajouter une icône', footShort: 'Projet de fans non officiel', footRights: 'Droits des images', footContributing: 'Contribuer', translating: 'Traduction : {lang}', progress: '{done} noms sur {total} ({pct})',
       draftsSaved: '{n} brouillons enregistrés dans ce navigateur', draftSaved: '1 brouillon enregistré dans ce navigateur', onlyUntranslated: 'Non traduits uniquement',
-      newLanguage: 'Commencer une nouvelle langue…', newLanguageLabel: 'Commencer une nouvelle langue', submit: 'Envoyer', submitCount: 'Envoyer {n}', done: 'Terminé', folderName: 'Nom du dossier', draftTag: 'brouillon'
+      addLanguage: 'Ajouter votre langue', newLanguage: 'Commencer une nouvelle langue…', newLanguageLabel: 'Commencer une nouvelle langue', submit: 'Envoyer', submitCount: 'Envoyer {n}', done: 'Terminé', folderName: 'Nom du dossier', draftTag: 'brouillon'
     },
     es: {
       title: 'Catálogo de iconos', search: 'Buscar iconos…', searchLabel: 'Buscar iconos', folders: 'Carpetas', all: 'Todo', icon: '{n} icono', icons: '{n} iconos',
@@ -171,7 +171,7 @@
       openTab: 'Abrir en una pestaña nueva', prev: 'Anterior', next: 'Siguiente', close: 'Cerrar', untranslated: 'sin traducir', coverage: '{lang}: {pct} traducido', notOpenTag: 'aún no abierto',
       translate: 'Traducir', addIcon: 'Añadir un icono', footShort: 'Proyecto de fans no oficial', footRights: 'Derechos de imagen', footContributing: 'Colaborar', translating: 'Traducción: {lang}', progress: '{done} de {total} con nombre ({pct})',
       draftsSaved: '{n} borradores guardados en este navegador', draftSaved: '1 borrador guardado en este navegador', onlyUntranslated: 'Solo sin traducir',
-      newLanguage: 'Empezar un idioma nuevo…', newLanguageLabel: 'Empezar un idioma nuevo', submit: 'Enviar', submitCount: 'Enviar {n}', done: 'Listo', folderName: 'Nombre de la carpeta', draftTag: 'borrador'
+      addLanguage: 'Añadir tu idioma', newLanguage: 'Empezar un idioma nuevo…', newLanguageLabel: 'Empezar un idioma nuevo', submit: 'Enviar', submitCount: 'Enviar {n}', done: 'Listo', folderName: 'Nombre de la carpeta', draftTag: 'borrador'
     },
     'pt-BR': {
       title: 'Catálogo de ícones', search: 'Buscar ícones…', searchLabel: 'Buscar ícones', folders: 'Pastas', all: 'Todos', icon: '{n} ícone', icons: '{n} ícones',
@@ -179,7 +179,7 @@
       openTab: 'Abrir em nova aba', prev: 'Anterior', next: 'Próximo', close: 'Fechar', untranslated: 'sem tradução', coverage: '{lang}: {pct} traduzido', notOpenTag: 'ainda não aberto',
       translate: 'Traduzir', addIcon: 'Adicionar um ícone', footShort: 'Projeto de fãs não oficial', footRights: 'Direitos das imagens', footContributing: 'Contribuir', translating: 'Tradução: {lang}', progress: '{done} de {total} com nome ({pct})',
       draftsSaved: '{n} rascunhos salvos neste navegador', draftSaved: '1 rascunho salvo neste navegador', onlyUntranslated: 'Só sem tradução',
-      newLanguage: 'Começar um novo idioma…', newLanguageLabel: 'Começar um novo idioma', submit: 'Enviar', submitCount: 'Enviar {n}', done: 'Concluir', folderName: 'Nome da pasta', draftTag: 'rascunho'
+      addLanguage: 'Adicionar seu idioma', newLanguage: 'Começar um novo idioma…', newLanguageLabel: 'Começar um novo idioma', submit: 'Enviar', submitCount: 'Enviar {n}', done: 'Concluir', folderName: 'Nome da pasta', draftTag: 'rascunho'
     },
     it: {
       title: 'Catalogo di icone', search: 'Cerca icone…', searchLabel: 'Cerca icone', folders: 'Cartelle', all: 'Tutte', icon: '{n} icona', icons: '{n} icone',
@@ -187,7 +187,7 @@
       openTab: 'Apri in una nuova scheda', prev: 'Precedente', next: 'Successiva', close: 'Chiudi', untranslated: 'non tradotto', coverage: '{lang}: {pct} tradotto', notOpenTag: 'non ancora aperta',
       translate: 'Traduci', addIcon: 'Aggiungi un’icona', footShort: 'Progetto di fan non ufficiale', footRights: 'Diritti delle immagini', footContributing: 'Contribuisci', translating: 'Traduzione: {lang}', progress: '{done} di {total} con nome ({pct})',
       draftsSaved: '{n} bozze salvate in questo browser', draftSaved: '1 bozza salvata in questo browser', onlyUntranslated: 'Solo non tradotte',
-      newLanguage: 'Inizia una nuova lingua…', newLanguageLabel: 'Inizia una nuova lingua', submit: 'Invia', submitCount: 'Invia {n}', done: 'Fine', folderName: 'Nome della cartella', draftTag: 'bozza'
+      addLanguage: 'Aggiungi la tua lingua', newLanguage: 'Inizia una nuova lingua…', newLanguageLabel: 'Inizia una nuova lingua', submit: 'Invia', submitCount: 'Invia {n}', done: 'Fine', folderName: 'Nome della cartella', draftTag: 'bozza'
     },
     pl: {
       title: 'Katalog ikon', search: 'Szukaj ikon…', searchLabel: 'Szukaj ikon', folders: 'Foldery', all: 'Wszystkie', icon: 'Ikony: {n}', icons: 'Ikony: {n}',
@@ -195,7 +195,7 @@
       openTab: 'Otwórz w nowej karcie', prev: 'Poprzednia', next: 'Następna', close: 'Zamknij', untranslated: 'bez tłumaczenia', coverage: '{lang}: przetłumaczono {pct}', notOpenTag: 'jeszcze nieotwarty',
       translate: 'Tłumacz', addIcon: 'Dodaj ikonę', footShort: 'Nieoficjalny projekt fanowski', footRights: 'Prawa do obrazów', footContributing: 'Współtworzenie', translating: 'Tłumaczenie: {lang}', progress: 'Nazwy: {done} z {total} ({pct})',
       draftsSaved: 'Szkice zapisane w tej przeglądarce: {n}', draftSaved: 'Szkice zapisane w tej przeglądarce: 1', onlyUntranslated: 'Tylko bez tłumaczenia',
-      newLanguage: 'Zacznij nowy język…', newLanguageLabel: 'Zacznij nowy język', submit: 'Wyślij', submitCount: 'Wyślij ({n})', done: 'Gotowe', folderName: 'Nazwa folderu', draftTag: 'szkic'
+      addLanguage: 'Dodaj swój język', newLanguage: 'Zacznij nowy język…', newLanguageLabel: 'Zacznij nowy język', submit: 'Wyślij', submitCount: 'Wyślij ({n})', done: 'Gotowe', folderName: 'Nazwa folderu', draftTag: 'szkic'
     },
     nl: {
       title: 'Pictogramcatalogus', search: 'Pictogrammen zoeken…', searchLabel: 'Pictogrammen zoeken', folders: 'Mappen', all: 'Alles', icon: '{n} pictogram', icons: '{n} pictogrammen',
@@ -203,7 +203,7 @@
       openTab: 'In nieuw tabblad openen', prev: 'Vorige', next: 'Volgende', close: 'Sluiten', untranslated: 'niet vertaald', coverage: '{lang}: {pct} vertaald', notOpenTag: 'nog niet open',
       translate: 'Vertalen', addIcon: 'Pictogram toevoegen', footShort: 'Onofficieel fanproject', footRights: 'Beeldrechten', footContributing: 'Bijdragen', translating: 'Vertaling: {lang}', progress: '{done} van {total} benoemd ({pct})',
       draftsSaved: '{n} concepten opgeslagen in deze browser', draftSaved: '1 concept opgeslagen in deze browser', onlyUntranslated: 'Alleen niet vertaald',
-      newLanguage: 'Nieuwe taal beginnen…', newLanguageLabel: 'Nieuwe taal beginnen', submit: 'Versturen', submitCount: '{n} versturen', done: 'Klaar', folderName: 'Mapnaam', draftTag: 'concept'
+      addLanguage: 'Voeg je taal toe', newLanguage: 'Nieuwe taal beginnen…', newLanguageLabel: 'Nieuwe taal beginnen', submit: 'Versturen', submitCount: '{n} versturen', done: 'Klaar', folderName: 'Mapnaam', draftTag: 'concept'
     },
     cs: {
       title: 'Katalog ikon', search: 'Hledat ikony…', searchLabel: 'Hledat ikony', folders: 'Složky', all: 'Vše', icon: 'Ikony: {n}', icons: 'Ikony: {n}',
@@ -211,7 +211,7 @@
       openTab: 'Otevřít na nové kartě', prev: 'Předchozí', next: 'Další', close: 'Zavřít', untranslated: 'nepřeloženo', coverage: '{lang}: přeloženo {pct}', notOpenTag: 'zatím neotevřeno',
       translate: 'Překládat', addIcon: 'Přidat ikonu', footShort: 'Neoficiální fanouškovský projekt', footRights: 'Práva k obrázkům', footContributing: 'Přispívání', translating: 'Překlad: {lang}', progress: 'Názvy: {done} z {total} ({pct})',
       draftsSaved: 'Koncepty uložené v tomto prohlížeči: {n}', draftSaved: 'Koncepty uložené v tomto prohlížeči: 1', onlyUntranslated: 'Jen nepřeložené',
-      newLanguage: 'Začít nový jazyk…', newLanguageLabel: 'Začít nový jazyk', submit: 'Odeslat', submitCount: 'Odeslat ({n})', done: 'Hotovo', folderName: 'Název složky', draftTag: 'koncept'
+      addLanguage: 'Přidat svůj jazyk', newLanguage: 'Začít nový jazyk…', newLanguageLabel: 'Začít nový jazyk', submit: 'Odeslat', submitCount: 'Odeslat ({n})', done: 'Hotovo', folderName: 'Název složky', draftTag: 'koncept'
     },
     uk: {
       title: 'Каталог значків', search: 'Шукати значки…', searchLabel: 'Шукати значки', folders: 'Теки', all: 'Усі', icon: 'Значки: {n}', icons: 'Значки: {n}',
@@ -219,7 +219,7 @@
       openTab: 'Відкрити в новій вкладці', prev: 'Попередній', next: 'Наступний', close: 'Закрити', untranslated: 'не перекладено', coverage: '{lang}: перекладено {pct}', notOpenTag: 'ще не відкрито',
       translate: 'Перекласти', addIcon: 'Додати значок', footShort: 'Неофіційний фанатський проєкт', footRights: 'Права на зображення', footContributing: 'Як долучитися', translating: 'Переклад: {lang}', progress: 'Назви: {done} з {total} ({pct})',
       draftsSaved: 'Чернетки в цьому браузері: {n}', draftSaved: 'Чернетки в цьому браузері: 1', onlyUntranslated: 'Лише неперекладені',
-      newLanguage: 'Почати нову мову…', newLanguageLabel: 'Почати нову мову', submit: 'Надіслати', submitCount: 'Надіслати ({n})', done: 'Готово', folderName: 'Назва теки', draftTag: 'чернетка'
+      addLanguage: 'Додати свою мову', newLanguage: 'Почати нову мову…', newLanguageLabel: 'Почати нову мову', submit: 'Надіслати', submitCount: 'Надіслати ({n})', done: 'Готово', folderName: 'Назва теки', draftTag: 'чернетка'
     },
     ru: {
       title: 'Каталог значков', search: 'Искать значки…', searchLabel: 'Искать значки', folders: 'Папки', all: 'Все', icon: 'Значки: {n}', icons: 'Значки: {n}',
@@ -227,7 +227,7 @@
       openTab: 'Открыть в новой вкладке', prev: 'Предыдущий', next: 'Следующий', close: 'Закрыть', untranslated: 'не переведено', coverage: '{lang}: переведено {pct}', notOpenTag: 'ещё не открыт',
       translate: 'Перевести', addIcon: 'Добавить значок', footShort: 'Неофициальный фанатский проект', footRights: 'Права на изображения', footContributing: 'Как помочь', translating: 'Перевод: {lang}', progress: 'Названия: {done} из {total} ({pct})',
       draftsSaved: 'Черновики в этом браузере: {n}', draftSaved: 'Черновики в этом браузере: 1', onlyUntranslated: 'Только без перевода',
-      newLanguage: 'Начать новый язык…', newLanguageLabel: 'Начать новый язык', submit: 'Отправить', submitCount: 'Отправить ({n})', done: 'Готово', folderName: 'Название папки', draftTag: 'черновик'
+      addLanguage: 'Добавить свой язык', newLanguage: 'Начать новый язык…', newLanguageLabel: 'Начать новый язык', submit: 'Отправить', submitCount: 'Отправить ({n})', done: 'Готово', folderName: 'Название папки', draftTag: 'черновик'
     },
     ja: {
       title: 'アイコンカタログ', search: 'アイコンを検索…', searchLabel: 'アイコンを検索', folders: 'フォルダー', all: 'すべて', icon: '{n} 個のアイコン', icons: '{n} 個のアイコン',
@@ -235,7 +235,7 @@
       openTab: '新しいタブで開く', prev: '前へ', next: '次へ', close: '閉じる', untranslated: '未翻訳', coverage: '{lang}: {pct} 翻訳済み', notOpenTag: '未公開',
       translate: '翻訳する', addIcon: 'アイコンを追加', footShort: '非公式ファンプロジェクト', footRights: '画像の権利', footContributing: '貢献する', translating: '{lang} に翻訳中', progress: '{total} 件中 {done} 件 ({pct})',
       draftsSaved: '{n} 件の下書きをこのブラウザーに保存しました', draftSaved: '1 件の下書きをこのブラウザーに保存しました', onlyUntranslated: '未翻訳のみ',
-      newLanguage: '新しい言語を始める…', newLanguageLabel: '新しい言語を始める', submit: '送信', submitCount: '{n} 件を送信', done: '完了', folderName: 'フォルダー名', draftTag: '下書き'
+      addLanguage: '自分の言語を追加', newLanguage: '新しい言語を始める…', newLanguageLabel: '新しい言語を始める', submit: '送信', submitCount: '{n} 件を送信', done: '完了', folderName: 'フォルダー名', draftTag: '下書き'
     },
     ko: {
       title: '아이콘 카탈로그', search: '아이콘 검색…', searchLabel: '아이콘 검색', folders: '폴더', all: '전체', icon: '아이콘 {n}개', icons: '아이콘 {n}개',
@@ -243,7 +243,7 @@
       openTab: '새 탭에서 열기', prev: '이전', next: '다음', close: '닫기', untranslated: '번역 안 됨', coverage: '{lang}: {pct} 번역됨', notOpenTag: '아직 열리지 않음',
       translate: '번역하기', addIcon: '아이콘 추가', footShort: '비공식 팬 프로젝트', footRights: '이미지 권리', footContributing: '기여하기', translating: '{lang} 번역 중', progress: '{total}개 중 {done}개 ({pct})',
       draftsSaved: '이 브라우저에 초안 {n}개 저장됨', draftSaved: '이 브라우저에 초안 1개 저장됨', onlyUntranslated: '번역 안 된 것만',
-      newLanguage: '새 언어 시작…', newLanguageLabel: '새 언어 시작', submit: '보내기', submitCount: '{n}개 보내기', done: '완료', folderName: '폴더 이름', draftTag: '초안'
+      addLanguage: '내 언어 추가', newLanguage: '새 언어 시작…', newLanguageLabel: '새 언어 시작', submit: '보내기', submitCount: '{n}개 보내기', done: '완료', folderName: '폴더 이름', draftTag: '초안'
     },
     'zh-CN': {
       title: '图标目录', search: '搜索图标…', searchLabel: '搜索图标', folders: '文件夹', all: '全部', icon: '{n} 个图标', icons: '{n} 个图标',
@@ -251,7 +251,7 @@
       openTab: '在新标签页中打开', prev: '上一个', next: '下一个', close: '关闭', untranslated: '未翻译', coverage: '{lang}:已翻译 {pct}', notOpenTag: '尚未开放',
       translate: '翻译', addIcon: '添加图标', footShort: '非官方粉丝项目', footRights: '图片权利', footContributing: '参与贡献', translating: '正在翻译为{lang}', progress: '{total} 个中已命名 {done} 个 ({pct})',
       draftsSaved: '{n} 份草稿已保存在此浏览器', draftSaved: '1 份草稿已保存在此浏览器', onlyUntranslated: '仅未翻译',
-      newLanguage: '开始新语言…', newLanguageLabel: '开始新语言', submit: '提交', submitCount: '提交 {n} 项', done: '完成', folderName: '文件夹名称', draftTag: '草稿'
+      addLanguage: '添加你的语言', newLanguage: '开始新语言…', newLanguageLabel: '开始新语言', submit: '提交', submitCount: '提交 {n} 项', done: '完成', folderName: '文件夹名称', draftTag: '草稿'
     },
     'zh-TW': {
       title: '圖示目錄', search: '搜尋圖示…', searchLabel: '搜尋圖示', folders: '資料夾', all: '全部', icon: '{n} 個圖示', icons: '{n} 個圖示',
@@ -259,7 +259,7 @@
       openTab: '在新分頁中開啟', prev: '上一個', next: '下一個', close: '關閉', untranslated: '未翻譯', coverage: '{lang}:已翻譯 {pct}', notOpenTag: '尚未開放',
       translate: '翻譯', addIcon: '新增圖示', footShort: '非官方粉絲專案', footRights: '圖片權利', footContributing: '參與貢獻', translating: '正在翻譯為{lang}', progress: '{total} 個中已命名 {done} 個 ({pct})',
       draftsSaved: '{n} 份草稿已儲存在此瀏覽器', draftSaved: '1 份草稿已儲存在此瀏覽器', onlyUntranslated: '僅未翻譯',
-      newLanguage: '開始新語言…', newLanguageLabel: '開始新語言', submit: '提交', submitCount: '提交 {n} 項', done: '完成', folderName: '資料夾名稱', draftTag: '草稿'
+      addLanguage: '新增你的語言', newLanguage: '開始新語言…', newLanguageLabel: '開始新語言', submit: '提交', submitCount: '提交 {n} 項', done: '完成', folderName: '資料夾名稱', draftTag: '草稿'
     }
   };
 
@@ -951,9 +951,11 @@
   function renderTools() {
     var box = $('tools');
     box.textContent = '';
+    loadAllNames();
     var picker = languageMenu({
       id: 'lang', label: t('language'), current: lang, codes: languageOptions(), labelOf: languageLabel,
-      onOpen: loadAllNames, onPick: setLang
+      onPick: setLang,
+      actions: [{ label: t('addLanguage'), run: startNewLanguage }]
     });
     var count = draftCount(lang);
     box.append(picker);
@@ -971,14 +973,26 @@
     );
   }
 
+  // Languages nobody has started yet. Those not open need the owner to add them before submitting.
   function newLanguageMenu() {
-    var codes = Object.keys(PROPOSABLE)
-      .filter(function (code) { return !isOpen(code) && code !== lang; })
-      .sort(function (a, b) { return PROPOSABLE[a].localeCompare(PROPOSABLE[b]); });
+    var codes = Object.keys(languages).concat(Object.keys(PROPOSABLE))
+      .filter(function (code, i, all) { return all.indexOf(code) === i && code !== lang && !hasNames(code); })
+      .sort(function (a, b) { return languageName(a).localeCompare(languageName(b)); });
     return languageMenu({
       id: 't-new', label: t('newLanguageLabel'), placeholder: t('newLanguage'), codes: codes,
-      labelOf: function (code) { return PROPOSABLE[code]; }, onPick: setLang
+      labelOf: languageName, onPick: setLang,
+      actions: [{ label: t('otherLanguage'), run: function () { window.open(REPO + '/edit/main/names/languages.json', '_blank', 'noopener'); } }]
     });
+  }
+
+  function startNewLanguage() {
+    if (!translating) setTranslating(true);
+    var box = $('t-new');
+    if (box && box.parentNode.open) box.parentNode.open();
+  }
+
+  function hasNames(code) {
+    return code === 'en' || (own(names, code) && coverage(code).done > 0);
   }
 
   function flagImg(code) {
@@ -1009,6 +1023,15 @@
       list.appendChild(row);
       return { row: row, text: text, code: code };
     });
+    (o.actions || []).forEach(function (action, n) {
+      var i = rows.length;
+      var row = el('li', {
+        class: 'menu-row menu-action' + (n ? '' : ' first'), id: listId + '-' + i, role: 'option', 'aria-selected': 'false',
+        on: { click: function () { pick(i); }, pointermove: function () { setActive(i, false); } }
+      }, [el('span', { class: 'menu-plus', 'aria-hidden': 'true', text: '+' }), el('span', { class: 'menu-text', text: action.label })]);
+      list.appendChild(row);
+      rows.push({ row: row, action: action });
+    });
     var wrap = el('div', { class: 'menu' }, [trigger, list]);
     trigger.appendChild(chosen);
     trigger.prepend(flagImg(o.current || ''));
@@ -1016,9 +1039,10 @@
 
     function refresh() {
       chosen.textContent = o.current ? o.labelOf(o.current) : o.placeholder;
-      rows.forEach(function (r) { r.text.textContent = o.labelOf(r.code); });
+      rows.forEach(function (r) { if (!r.action) r.text.textContent = o.labelOf(r.code); });
     }
     wrap.refresh = refresh;
+    wrap.open = function () { if (list.hidden) open(); };
     refresh();
 
     function setActive(i, reveal) {
@@ -1030,11 +1054,10 @@
       if (reveal) rows[i].row.scrollIntoView({ block: 'nearest' });
     }
     function open() {
-      if (o.onOpen) o.onOpen();
       list.hidden = false;
       trigger.setAttribute('aria-expanded', 'true');
       wrap.classList.toggle('up', trigger.getBoundingClientRect().bottom + list.offsetHeight > window.innerHeight - 8 && trigger.getBoundingClientRect().top > list.offsetHeight);
-      var at = rows.findIndex(function (r) { return r.code === o.current; });
+      var at = rows.findIndex(function (r) { return !r.action && r.code === o.current; });
       setActive(at < 0 ? 0 : at, true);
       list.focus({ preventScroll: true });
       document.addEventListener('pointerdown', outside, true);
@@ -1050,9 +1073,11 @@
       if (!wrap.contains(e.target)) close(false);
     }
     function pick(i) {
-      var code = rows[i] && rows[i].code;
+      var chosenRow = rows[i];
       close(true);
-      if (code && code !== o.current) o.onPick(code);
+      if (!chosenRow) return;
+      if (chosenRow.action) chosenRow.action.run();
+      else if (chosenRow.code !== o.current) o.onPick(chosenRow.code);
     }
     function onKey(e) {
       var k = e.key;
@@ -1071,28 +1096,28 @@
         var now = Date.now();
         typed = (now - typedAt > 700 ? '' : typed) + k.toLocaleLowerCase();
         typedAt = now;
-        var hit = rows.findIndex(function (r) { return languageName(r.code).toLocaleLowerCase().indexOf(typed) === 0; });
+        var hit = rows.findIndex(function (r) { return !r.action && languageName(r.code).toLocaleLowerCase().indexOf(typed) === 0; });
         if (hit >= 0) setActive(hit, true);
       }
     }
     return wrap;
   }
 
-  // Percentages need every names file, so they load only when someone reaches for the list.
+  // The list shows only started languages, so every names file loads once and the menus redraw.
   var allNames;
 
   function loadAllNames() {
-    if (!loaded) return;
-    allNames = allNames || Promise.all(Object.keys(languages).map(loadNames));
+    if (!loaded || allNames) return;
+    allNames = Promise.all(Object.keys(languages).map(loadNames));
     allNames.then(function () {
-      var box = $('lang');
-      if (box && box.parentNode.refresh) box.parentNode.refresh();
+      var open = document.querySelector('.menu-btn[aria-expanded=true]');
+      if (!open) renderTools();
     });
   }
 
   // English first, the rest by name
   function languageOptions() {
-    var codes = Object.keys(languages);
+    var codes = Object.keys(languages).filter(hasNames);
     Object.keys(drafts).concat(lang).forEach(function (code) {
       if (codes.indexOf(code) < 0) codes.push(code);
     });
