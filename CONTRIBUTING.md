@@ -17,14 +17,14 @@ The same terms cover translations: you wrote them, and they may be used the same
 ## Adding icons
 
 1. Fork the repository and create a branch.
-2. Add `.webp` files in the folder under `wychwood/` that fits. Most icons belong in `wychwood/items/`.
+2. Add `.webp` files in the folder under `icons/` that fits. Most icons belong in `icons/items/`.
 3. Open a pull request and fill in the template.
 
 To convert an image: `cwebp -q 85 -metadata none input.png -o my_icon.webp`.
 
 ### Rules
 
-| | Under `wychwood/items/` | Elsewhere under `wychwood/` |
+| | Under `icons/items/` | Elsewhere under `icons/` |
 |---|---|---|
 | File size | 64 KiB | 512 KiB |
 | Longest side | 512 px | 1600 px |

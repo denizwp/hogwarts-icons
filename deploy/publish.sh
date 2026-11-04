@@ -18,7 +18,7 @@ rsync -r --perms --chmod=D755,F644 --checksum --prune-empty-dirs --itemize-chang
   -e "${ssh_cmd[*]}" \
   --include=/index.html --include=/docs.html --include=/catalog.js --include=/catalog.css \
   --include=/names/ --include='/names/*.json' \
-  --include=/wychwood/ --include='/wychwood/**/' --include='/wychwood/**.webp' \
+  --include=/icons/ --include='/icons/**/' --include='/icons/**.webp' \
   --exclude='*' \
   ./ "$CDN_USER@$CDN_HOST:/"
 

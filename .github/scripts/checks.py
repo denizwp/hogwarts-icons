@@ -9,7 +9,7 @@ import re
 import struct
 import subprocess
 
-IMAGE_ROOT = 'wychwood/'
+IMAGE_ROOT = 'icons/'
 NAMES_DIR = 'names/'
 LANGUAGES_FILE = 'names/languages.json'
 IMAGE_EXT = '.webp'
@@ -41,7 +41,7 @@ def git(repo, *args):
 
 
 def limits_for(path):
-    return ICON_LIMITS if path.startswith('wychwood/items/') else ART_LIMITS
+    return ICON_LIMITS if path.startswith('icons/items/') else ART_LIMITS
 
 
 def parse_json(text):

@@ -12,7 +12,7 @@ body:
     attributes:
       label: Translation data
       description: 'JSON with "lang" and "names". See docs/CONTRIBUTION-CONTRACT.md.'
-      placeholder: '{"lang": "tr", "names": {"wychwood/items/shop/wy_key": "Anahtar"}}'
+      placeholder: '{"lang": "tr", "names": {"icons/items/shop/wy_key": "Anahtar"}}'
       render: json
     validations:
       required: true

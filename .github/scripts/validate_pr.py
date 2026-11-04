@@ -155,7 +155,7 @@ def validate(repo, base, head):
 
         if is_image_area:
             if not path.endswith(checks.IMAGE_EXT):
-                report.error(path, 'only .webp files are allowed under wychwood/')
+                report.error(path, 'only .webp files are allowed under icons/')
                 continue
             if mode != '100644':
                 report.error(path, 'the file must not be executable')
@@ -185,7 +185,7 @@ def validate(repo, base, head):
         elif '/' not in path:
             report.warn(path, 'changes a file at the repository root')
         else:
-            report.warn(path, 'outside wychwood/ and names/')
+            report.warn(path, 'outside icons/ and names/')
 
     if total > MAX_TOTAL_BYTES:
         report.error('(pull request)', f'{total} bytes added, the limit is {MAX_TOTAL_BYTES}: split it up')

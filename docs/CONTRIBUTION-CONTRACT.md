@@ -19,12 +19,12 @@ A flat JSON object, UTF-8, sorted by key, one space of indent, LF line endings:
 
 ```json
 {
- "wychwood/herbs/dittany": "Dittany",
- "wychwood/items/shop/wy_key": "Key"
+ "icons/herbs/dittany": "Dittany",
+ "icons/items/shop/wy_key": "Key"
 }
 ```
 
-- A key is a repository path without the extension: an image (`wychwood/items/shop/wy_key` for `wychwood/items/shop/wy_key.webp`) or a folder that contains images (`wychwood/herbs/dittany`). Folder keys label the tree.
+- A key is a repository path without the extension: an image (`icons/items/shop/wy_key` for `icons/items/shop/wy_key.webp`) or a folder that contains images (`icons/herbs/dittany`). Folder keys label the tree.
 - A value is the display name. It is plain text; render it with `textContent`, never `innerHTML`.
 - Files are partial. A missing key is normal, and a missing file (404) means an empty translation.
 
@@ -34,7 +34,7 @@ Fallback for an image: the language's name, then what the site shows today (`pre
 
 ## Renamed images
 
-`renames.json` at the root maps every renamed image from its old path to its new path. The old files stay on the CDN because deploys never delete, so old URLs keep working, and `/index.json` lists both until someone removes the old files by hand. Names files use only the new paths.
+`renames.json` at the root maps every image from its old path to its new path: the top folder moved from `wychwood/` to `icons/`, and Turkish names became English. The old files stay on the CDN because deploys never delete, so old URLs keep working, and `/index.json` lists both until someone removes the old files by hand. The site hides the old `wychwood/` folder (`LEGACY_ROOT` in `catalog.js`). Names files use only the new paths.
 
 ### `names/languages.json`
 
@@ -70,7 +70,7 @@ The issue title carries no data. The automation ignores it, so it can be anythin
 {
   "lang": "tr",
   "names": {
-    "wychwood/items/shop/wy_key": "Anahtar"
+    "icons/items/shop/wy_key": "Anahtar"
   }
 }
 ```

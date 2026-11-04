@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'wychwood/**'
+      - 'icons/**'
       - 'names/**'
       - 'index.html'
       - 'docs.html'
@@ -72,7 +72,7 @@ jobs:
             echo '::warning::Could not read the published index.json.'
             exit 0
           fi
-          git ls-files -z -- 'wychwood/*.webp' > "$RUNNER_TEMP/tracked"
+          git ls-files -z -- 'icons/*.webp' > "$RUNNER_TEMP/tracked"
           python3 -I -c '
           import json, sys
           dirs = json.load(open(sys.argv[1], encoding="utf-8"))["dirs"]
