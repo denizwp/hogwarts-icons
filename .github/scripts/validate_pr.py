@@ -18,7 +18,9 @@ MAX_TOTAL_BYTES = 50 * 1024 * 1024
 SEGMENT = re.compile(r'[A-Za-z0-9_](?:[A-Za-z0-9_.-]*[A-Za-z0-9_-])?')
 WINDOWS_RESERVED = re.compile(r'(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?', re.I)
 FORBIDDEN = re.compile(r'(^|/)(\.cdn-guncelle\.sh|cdn-guncelle\.bat|index\.json|[^/]*\.zip)$', re.I)
-RESERVED_PREFIX = re.compile(r'^(UI_T_|MOD_|wy_)', re.I)
+PROJECT_PREFIX = re.compile(r'^wy_', re.I)
+SOURCE_PREFIX = re.compile(r'^(UI_T_|MOD_)', re.I)
+SOURCE_FOLDER = re.compile(r'^icons/items/(?!shop/|cards/)[^/]+/')
 
 
 class Report:
@@ -68,6 +70,14 @@ def path_problem(path):
             return 'unsafe characters in the path: use letters, digits, _ - and .'
         if WINDOWS_RESERVED.fullmatch(segment):
             return 'the path uses a name reserved on Windows'
+    return None
+
+
+def owner_only_problem(path):
+    if path.startswith('.github/'):
+        return 'changes repository automation. Read this diff first: the checks themselves can be altered here. The owner merges exceptions by hand'
+    if '/' not in path:
+        return 'changes a file at the repository root. The owner merges exceptions by hand'
     return None
 
 
@@ -139,11 +149,14 @@ def validate(repo, base, head):
             continue
         is_image_area = path.startswith(checks.IMAGE_ROOT)
         is_names = path.startswith(checks.NAMES_DIR)
+        owner_only = owner_only_problem(path)
+        if owner_only:
+            report.error(path, owner_only)
 
         if status == 'D':
             if is_image_area or is_names:
                 report.error(path, 'removing this breaks URLs that are in use. Removal requests go through an issue')
-            else:
+            elif not owner_only:
                 report.warn(path, 'removes a file outside the image and names folders')
             continue
 
@@ -161,9 +174,13 @@ def validate(repo, base, head):
                 report.error(path, 'the file must not be executable')
             existing = base_tree.get(path)
             if status == 'M' or (existing and existing[1] != sha):
-                report.warn(path, 'REPLACES an existing image at a URL games already use')
-            elif status == 'A' and RESERVED_PREFIX.match(path.rsplit('/', 1)[-1]):
-                report.warn(path, 'new file with a prefix ASSETS.md reserves (UI_T_, MOD_, wy_)')
+                report.error(path, 'REPLACES an existing image at a URL games already use. The owner merges exceptions by hand')
+            elif status == 'A':
+                file_name = path.rsplit('/', 1)[-1]
+                if PROJECT_PREFIX.match(file_name):
+                    report.warn(path, 'new file with the wy_ prefix, which is reserved for this project')
+                elif SOURCE_PREFIX.match(file_name) and not SOURCE_FOLDER.match(path):
+                    report.warn(path, 'UI_T_ and MOD_ files belong in a folder under icons/items/, not in shop, cards or the artwork folders')
             limits = checks.limits_for(path)
             if size > limits['bytes']:
                 report.error(path, f'{size} bytes, the limit here is {limits["bytes"]}')
@@ -180,11 +197,7 @@ def validate(repo, base, head):
                 report.error(path, 'the file must not be executable')
             else:
                 check_names_file(repo, path, sha, head_tree, report)
-        elif path.startswith('.github/'):
-            report.warn(path, 'changes repository automation: read this diff first, the checks themselves can be altered here')
-        elif '/' not in path:
-            report.warn(path, 'changes a file at the repository root')
-        else:
+        elif not owner_only:
             report.warn(path, 'outside icons/ and names/')
 
     if total > MAX_TOTAL_BYTES:
