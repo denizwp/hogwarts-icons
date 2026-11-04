@@ -68,6 +68,7 @@
       folders: 'Folders', all: 'All', icon: '{n} icon', icons: '{n} icons', none: 'No results.', allDone: 'Everything here has a name.',
       failed: 'Could not load the icon list. Check your connection and reload the page.',
       skip: 'Skip to icons', contact: 'Contact me:', language: 'Language',
+      aiPrompt: 'AI prompt', aiTitle: 'Prompt for your AI', aiHelp: 'Paste this into your AI assistant so it can find and use these icons.',
       copy: 'Copy', copied: 'Copied', url: 'URL', path: 'Path', name: 'Name', openTab: 'Open in new tab', prev: 'Previous', next: 'Next', close: 'Close',
       untranslated: 'untranslated', coverage: '{lang}: {pct} translated', notOpenTag: 'not open yet',
       translate: 'Translate', addIcon: 'Add an icon',
@@ -113,6 +114,7 @@
       folders: 'Klasörler', all: 'Tümü', icon: '{n} ikon', icons: '{n} ikon', none: 'Sonuç yok.', allDone: 'Buradaki her ikonun adı var.',
       failed: 'İkon listesi yüklenemedi. Bağlantını kontrol edip sayfayı yenile.',
       skip: 'İkonlara geç', contact: 'Bana ulaş:', language: 'Dil',
+      aiPrompt: 'AI promptu', aiTitle: 'Yapay zekân için hazır prompt', aiHelp: 'Bunu yapay zekâ asistanına yapıştır, ikonları bulup kullanabilsin.',
       copy: 'Kopyala', copied: 'Kopyalandı', url: 'Adres', path: 'Yol', name: 'Ad', openTab: 'Yeni sekmede aç', prev: 'Önceki', next: 'Sonraki', close: 'Kapat',
       untranslated: 'çevrilmedi', coverage: '{lang}: {pct} çevrildi', notOpenTag: 'henüz açık değil',
       translate: 'Çevir', addIcon: 'İkon ekle',
@@ -992,6 +994,10 @@
       el('button', {
         class: 'btn', id: 'add-icon', type: 'button', text: t('addIcon'),
         on: { click: openHelp }
+      }),
+      el('button', {
+        class: 'btn', id: 'ai-prompt', type: 'button', text: t('aiPrompt'),
+        on: { click: openAiPrompt }
       })
     );
   }
@@ -1501,6 +1507,43 @@
   }
 
   /* ---------- contribute dialog ---------- */
+
+  // The prompt stays in English: it is read by the assistant, not the person.
+  var AI_PROMPT = [
+    'You can use icons from the Hogwarts Icons catalog, a set of Hogwarts Legacy style item icons, in this project.',
+    '',
+    'Catalog: ' + BASE,
+    'Name list: ' + BASE + 'names/en.json',
+    'Source and rules: ' + REPO,
+    '',
+    'How to find an icon:',
+    '1. Fetch the name list. It is a JSON object: each key is a path without its extension, each value is an English name. Example: "icons/items/materials/wy_timber": "Timber".',
+    '2. Search the names and paths for what you need. Other languages are at names/<language>.json, for example names/tr.json, and may be incomplete.',
+    '3. Build the image URL as ' + BASE + '<key>.webp',
+    '4. Check that the URL answers 200 before using it. Some keys are folders, such as icons/items/food, and have no image.',
+    '',
+    'Main folders: icons/items/ holds food, sweets, drinks, books, writing, flying, accessories, jewellery, pets, tools, toys, household, materials, coins, other, ingredients, plants, potions, gear (clothing), creator, spells, wands, beards, personas and cards. icons/herbs, icons/cauldron, icons/cards and icons/lobby hold larger artwork.',
+    '',
+    'Rules:',
+    '- Never invent a path. If nothing fits, say so and suggest the closest match.',
+    '- All images are WebP. Do not assume a size: read it from the file if it matters.',
+    '- Do not use the old items/shop, items/items or items/rp folders.',
+    '- This is an unofficial fan project. Game icons belong to their owners and are not licensed by it, so tell me before using icons in anything commercial. See ' + REPO + '/blob/main/ASSETS.md'
+  ].join('\n');
+
+  function openAiPrompt() {
+    var dlg = $('help');
+    var box = $('help-body');
+    box.textContent = '';
+    var text = el('textarea', { class: 'ai-text', readOnly: true, rows: 16, value: AI_PROMPT, 'aria-label': t('aiTitle') });
+    var copyBtn = el('button', {
+      class: 'btn primary', type: 'button', text: t('copy'),
+      on: { click: function () { copy(AI_PROMPT, copyBtn); } }
+    });
+    box.append(dialogHead('aiTitle', dlg), para(t('aiHelp')), text, el('div', { class: 'actions end' }, [copyBtn]));
+    if (!dlg.open) dlg.showModal();
+    copyBtn.focus();
+  }
 
   function openHelp() {
     var dlg = $('help');

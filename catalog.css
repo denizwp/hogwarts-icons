@@ -155,6 +155,7 @@ figure.edit figcaption small.err{color:var(--err)}
 .text p{margin:0;line-height:1.5;max-width:64ch;overflow-wrap:anywhere}
 .steps{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:2px;line-height:1.5}
 .actions{display:flex;flex-wrap:wrap;gap:8px}
+.ai-text{font-size:12.5px;line-height:1.5;min-height:280px}
 .actions.end{justify-content:flex-end;padding-top:4px}
 .field{display:flex;flex-direction:column;gap:6px}
 .field-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted)}
