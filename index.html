@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>İkon Kataloğu</title>
+<link rel="stylesheet" href="/catalog.css">
+</head>
+<body>
+<header>
+  <button id="toggle" type="button">Klasörler</button>
+  <h1>İkon Kataloğu<span id="total"></span></h1>
+  <input id="q" type="search" placeholder="Ara: ahsap, herbs olgun, burger…" autocomplete="off">
+</header>
+<div class="wrap">
+  <aside><ul id="tree"></ul></aside>
+  <main>
+    <div class="bar"><div class="crumbs" id="crumbs"></div><span class="count" id="count"></span></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>Sonuç yok.</div>
+    <div id="more"></div>
+  </main>
+</div>
+<dialog id="dlg">
+  <div class="dlg">
+    <div class="dlg-top">
+      <h2 id="d-title"></h2>
+      <button class="icon-btn" id="d-prev" type="button" aria-label="Önceki" title="Önceki (←)">&#8592;</button>
+      <button class="icon-btn" id="d-next" type="button" aria-label="Sonraki" title="Sonraki (→)">&#8594;</button>
+      <button class="icon-btn" id="d-close" type="button" aria-label="Kapat" title="Kapat (Esc)">&#10005;</button>
+    </div>
+    <div class="stage"><img id="d-img" alt=""><span class="dim" id="d-dim"></span></div>
+    <div class="rows">
+      <div class="row"><label for="d-url">Adres</label><input id="d-url" readonly><button type="button" data-copy="d-url">Kopyala</button></div>
+      <div class="row"><label for="d-path">Yol</label><input id="d-path" readonly><button type="button" data-copy="d-path">Kopyala</button></div>
+      <div class="row"><label for="d-name">Ad</label><input id="d-name" readonly><button type="button" data-copy="d-name">Kopyala</button></div>
+    </div>
+    <div class="dlg-foot"><span id="d-pos"></span><a id="d-open" target="_blank" rel="noopener">Yeni sekmede aç</a></div>
+  </div>
+</dialog>
+<script src="/catalog.js"></script>
+</body>
+</html>

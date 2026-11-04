@@ -1,0 +1,9 @@
+# Sunucu bilgisi ve eski elle yukleme
+.cdn-guncelle.sh
+cdn-guncelle.bat
+# Paket, depoya degil isteyene
+*.zip
+# CDN'de sunucunun urettigi liste
+index.json
+.DS_Store
+Thumbs.db
