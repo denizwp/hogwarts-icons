@@ -4,15 +4,10 @@
   var URL_LIMIT = 8000;
   var JSON_LIMIT = 60000;
   var NAME_LIMIT = 120;
-  // The repository's automation only accepts names for images it tracks. The CDN also lists other folders, and old
-  // paths stay there after a rename because deploys never delete. So when names/en.json covers most images, an image
-  // without an English entry is not offered for translation; otherwise the path rules alone decide.
-  var TRANSLATABLE_ROOT = 'icons';
-  // Old top folder: stays on the CDN for old game code, not shown in the catalog
-  var LEGACY_ROOT = 'wychwood';
+  // The site shows this folder only. The CDN holds other folders too; their direct URLs keep working.
+  var ROOT = 'icons';
   var TRANSLATABLE_EXT = /\.webp$/;
   var CHUNK = 240;
-  var ROOT = document.documentElement.dataset.root || '';
   var STORE_LANG = 'hogwarts-icons.lang';
   var STORE_DRAFTS = 'hogwarts-icons.drafts';
 
@@ -29,8 +24,8 @@
   // Interface text. en is complete; any key or language missing here shows in English.
   var UI = {
     en: {
-      title: 'Icon Catalog', titleRoot: 'Wychwood Icons',
-      search: 'Search: burger, herbs olgun, key…', searchRoot: 'Search: ahsap, adamotu olgun, aguamenti…', searchLabel: 'Search icons',
+      title: 'Icon Catalog',
+      search: 'Search: absinthe, dittany, wand…', searchLabel: 'Search icons',
       folders: 'Folders', all: 'All', icon: '{n} icon', icons: '{n} icons', none: 'No results.', allDone: 'Everything here has a name.',
       failed: 'Could not load the icon list. Check your connection and reload the page.',
       skip: 'Skip to icons', contact: 'Contact me:', language: 'Language',
@@ -44,7 +39,7 @@
       draftsVolatile: 'Drafts only in this tab: {n}. This browser is not saving them, so submit before you close it.',
       onlyUntranslated: 'Untranslated only', newLanguage: 'Start a new language…', newLanguageLabel: 'Start a new language', submit: 'Submit', submitCount: 'Submit {n}', done: 'Done',
       notOpenBar: '{lang} is not open yet. You can draft here, and submitting needs the language added first.',
-      folderName: 'Folder name', draftTag: 'draft', nameFor: 'Name for {source}, {path}',
+      folderName: 'Folder name', draftTag: 'draft', previewKey: 'Alt+Enter: large preview', nameFor: 'Name for {source}, {path}',
       errLong: 'Keep it to 120 characters or fewer.', errAngle: 'Remove < and >.', errEntity: 'Write the character itself instead of an HTML entity such as &amp;.', errUrl: 'Remove the web address (://).',
       errControl: 'Remove the line breaks and control characters.', errBidi: 'Remove the text direction override characters.',
       sendTitle: 'Submit translation', sendSummary: '{n} names in {lang}.', sendSummaryOne: '1 name in {lang}.', sendNothing: 'Nothing to submit yet. Type a name into any icon first.',
@@ -62,7 +57,7 @@
       discard: 'Discard these drafts', discardSure: 'Discard for good ({n})',
       helpTitle: 'Contribute',
       helpTranslateTitle: 'Translate the names',
-      helpTranslate: 'Icon names can be shown in any language we open. Switch to translate mode, type names right on the icons and submit them when you are ready. Your drafts stay in this browser until then. You need a GitHub account to submit. Only the Wychwood icons can be translated for now, because the other folders are not in the repository.',
+      helpTranslate: 'Icon names can be shown in any language we open. Switch to translate mode, type names right on the icons and submit them when you are ready. Your drafts stay in this browser until then. You need a GitHub account to submit.',
       helpTranslateGo: 'Start translating',
       helpIconTitle: 'Add an icon',
       helpIcon: 'Icons are added by pull request, and the owner reviews every one.',
@@ -74,8 +69,8 @@
       helpRightsGo: 'Read ASSETS.md'
     },
     tr: {
-      title: 'İkon Kataloğu', titleRoot: 'Wychwood İkonları',
-      search: 'Ara: ahsap, herbs olgun, burger…', searchRoot: 'Ara: ahsap, adamotu olgun, aguamenti…', searchLabel: 'İkon ara',
+      title: 'İkon Kataloğu',
+      search: 'Ara: absent, anahtar, dittany…', searchLabel: 'İkon ara',
       folders: 'Klasörler', all: 'Tümü', icon: '{n} ikon', icons: '{n} ikon', none: 'Sonuç yok.', allDone: 'Buradaki her ikonun adı var.',
       failed: 'İkon listesi yüklenemedi. Bağlantını kontrol edip sayfayı yenile.',
       skip: 'İkonlara geç', contact: 'Bana ulaş:', language: 'Dil',
@@ -89,7 +84,7 @@
       draftsVolatile: '{n} taslak yalnızca bu sekmede. Tarayıcı bunları kaydetmiyor, kapatmadan önce gönder.',
       onlyUntranslated: 'Yalnızca çevrilmemişler', newLanguage: 'Yeni dil başlat…', newLanguageLabel: 'Yeni dil başlat', submit: 'Gönder', submitCount: '{n} ad gönder', done: 'Bitti',
       notOpenBar: '{lang} henüz açık değil. Burada taslak yazabilirsin, göndermek için önce dilin eklenmesi gerekir.',
-      folderName: 'Klasör adı', draftTag: 'taslak', nameFor: '{source} için ad, {path}',
+      folderName: 'Klasör adı', draftTag: 'taslak', previewKey: 'Alt+Enter: büyük önizleme', nameFor: '{source} için ad, {path}',
       errLong: 'En fazla 120 karakter yaz.', errAngle: '< ve > işaretlerini çıkar.', errEntity: '&amp; gibi HTML kodu yerine karakterin kendisini yaz.', errUrl: 'Web adresini (://) çıkar.',
       errControl: 'Satır sonlarını ve kontrol karakterlerini çıkar.', errBidi: 'Yazı yönü değiştiren karakterleri çıkar.',
       sendTitle: 'Çeviriyi gönder', sendSummary: '{lang} için {n} ad.', sendSummaryOne: '{lang} için 1 ad.', sendNothing: 'Henüz gönderilecek bir şey yok. Önce bir ikona ad yaz.',
@@ -107,7 +102,7 @@
       discard: 'Bu taslakları sil', discardSure: 'Kalıcı olarak sil ({n})',
       helpTitle: 'Katkıda bulun',
       helpTranslateTitle: 'Adları çevir',
-      helpTranslate: 'İkon adları açtığımız her dilde gösterilebilir. Çeviri moduna geç, adları doğrudan ikonların üstüne yaz, hazır olunca gönder. O zamana kadar taslakların bu tarayıcıda kalır. Göndermek için GitHub hesabın olmalı. Şimdilik yalnızca Wychwood ikonları çevrilebilir, çünkü diğer klasörler depoda değil.',
+      helpTranslate: 'İkon adları açtığımız her dilde gösterilebilir. Çeviri moduna geç, adları doğrudan ikonların üstüne yaz, hazır olunca gönder. O zamana kadar taslakların bu tarayıcıda kalır. Göndermek için GitHub hesabın olmalı.',
       helpTranslateGo: 'Çeviriye başla',
       helpIconTitle: 'İkon ekle',
       helpIcon: 'İkonlar pull request ile eklenir, sahibi her birini inceler.',
@@ -119,7 +114,7 @@
       helpRightsGo: 'ASSETS.md dosyasını oku'
     },
     de: {
-      title: 'Icon-Katalog', titleRoot: 'Wychwood-Icons', search: 'Icons suchen…', searchLabel: 'Icons suchen', folders: 'Ordner', all: 'Alle', icon: '{n} Icon', icons: '{n} Icons',
+      title: 'Icon-Katalog', search: 'Icons suchen…', searchLabel: 'Icons suchen', folders: 'Ordner', all: 'Alle', icon: '{n} Icon', icons: '{n} Icons',
       none: 'Keine Ergebnisse.', allDone: 'Hier hat jedes Icon einen Namen.', skip: 'Zu den Icons springen', contact: 'Kontakt:', language: 'Sprache', copy: 'Kopieren', copied: 'Kopiert', url: 'URL', path: 'Pfad', name: 'Name',
       openTab: 'In neuem Tab öffnen', prev: 'Zurück', next: 'Weiter', close: 'Schließen', untranslated: 'nicht übersetzt', coverage: '{lang}: {pct} übersetzt', notOpenTag: 'noch nicht offen',
       translate: 'Übersetzen', addIcon: 'Icon hinzufügen', footShort: 'Inoffizielles Fanprojekt', footRights: 'Bildrechte', footContributing: 'Mitwirken', translating: 'Übersetzung: {lang}', progress: '{done} von {total} benannt ({pct})',
@@ -127,7 +122,7 @@
       newLanguage: 'Neue Sprache beginnen…', newLanguageLabel: 'Neue Sprache beginnen', submit: 'Senden', submitCount: '{n} senden', done: 'Fertig', folderName: 'Ordnername', draftTag: 'Entwurf'
     },
     fr: {
-      title: 'Catalogue d’icônes', titleRoot: 'Icônes Wychwood', search: 'Rechercher des icônes…', searchLabel: 'Rechercher des icônes', folders: 'Dossiers', all: 'Tout', icon: '{n} icône', icons: '{n} icônes',
+      title: 'Catalogue d’icônes', search: 'Rechercher des icônes…', searchLabel: 'Rechercher des icônes', folders: 'Dossiers', all: 'Tout', icon: '{n} icône', icons: '{n} icônes',
       none: 'Aucun résultat.', allDone: 'Ici, chaque icône a un nom.', skip: 'Aller aux icônes', contact: 'Me contacter :', language: 'Langue', copy: 'Copier', copied: 'Copié', url: 'URL', path: 'Chemin', name: 'Nom',
       openTab: 'Ouvrir dans un nouvel onglet', prev: 'Précédent', next: 'Suivant', close: 'Fermer', untranslated: 'non traduit', coverage: '{lang} : {pct} traduit', notOpenTag: 'pas encore ouverte',
       translate: 'Traduire', addIcon: 'Ajouter une icône', footShort: 'Projet de fans non officiel', footRights: 'Droits des images', footContributing: 'Contribuer', translating: 'Traduction : {lang}', progress: '{done} noms sur {total} ({pct})',
@@ -135,7 +130,7 @@
       newLanguage: 'Commencer une nouvelle langue…', newLanguageLabel: 'Commencer une nouvelle langue', submit: 'Envoyer', submitCount: 'Envoyer {n}', done: 'Terminé', folderName: 'Nom du dossier', draftTag: 'brouillon'
     },
     es: {
-      title: 'Catálogo de iconos', titleRoot: 'Iconos de Wychwood', search: 'Buscar iconos…', searchLabel: 'Buscar iconos', folders: 'Carpetas', all: 'Todo', icon: '{n} icono', icons: '{n} iconos',
+      title: 'Catálogo de iconos', search: 'Buscar iconos…', searchLabel: 'Buscar iconos', folders: 'Carpetas', all: 'Todo', icon: '{n} icono', icons: '{n} iconos',
       none: 'Sin resultados.', allDone: 'Aquí todos los iconos tienen nombre.', skip: 'Ir a los iconos', contact: 'Contacto:', language: 'Idioma', copy: 'Copiar', copied: 'Copiado', url: 'URL', path: 'Ruta', name: 'Nombre',
       openTab: 'Abrir en una pestaña nueva', prev: 'Anterior', next: 'Siguiente', close: 'Cerrar', untranslated: 'sin traducir', coverage: '{lang}: {pct} traducido', notOpenTag: 'aún no abierto',
       translate: 'Traducir', addIcon: 'Añadir un icono', footShort: 'Proyecto de fans no oficial', footRights: 'Derechos de imagen', footContributing: 'Colaborar', translating: 'Traducción: {lang}', progress: '{done} de {total} con nombre ({pct})',
@@ -143,7 +138,7 @@
       newLanguage: 'Empezar un idioma nuevo…', newLanguageLabel: 'Empezar un idioma nuevo', submit: 'Enviar', submitCount: 'Enviar {n}', done: 'Listo', folderName: 'Nombre de la carpeta', draftTag: 'borrador'
     },
     'pt-BR': {
-      title: 'Catálogo de ícones', titleRoot: 'Ícones de Wychwood', search: 'Buscar ícones…', searchLabel: 'Buscar ícones', folders: 'Pastas', all: 'Todos', icon: '{n} ícone', icons: '{n} ícones',
+      title: 'Catálogo de ícones', search: 'Buscar ícones…', searchLabel: 'Buscar ícones', folders: 'Pastas', all: 'Todos', icon: '{n} ícone', icons: '{n} ícones',
       none: 'Nenhum resultado.', allDone: 'Aqui todos os ícones têm nome.', skip: 'Ir para os ícones', contact: 'Contato:', language: 'Idioma', copy: 'Copiar', copied: 'Copiado', url: 'URL', path: 'Caminho', name: 'Nome',
       openTab: 'Abrir em nova aba', prev: 'Anterior', next: 'Próximo', close: 'Fechar', untranslated: 'sem tradução', coverage: '{lang}: {pct} traduzido', notOpenTag: 'ainda não aberto',
       translate: 'Traduzir', addIcon: 'Adicionar um ícone', footShort: 'Projeto de fãs não oficial', footRights: 'Direitos das imagens', footContributing: 'Contribuir', translating: 'Tradução: {lang}', progress: '{done} de {total} com nome ({pct})',
@@ -151,7 +146,7 @@
       newLanguage: 'Começar um novo idioma…', newLanguageLabel: 'Começar um novo idioma', submit: 'Enviar', submitCount: 'Enviar {n}', done: 'Concluir', folderName: 'Nome da pasta', draftTag: 'rascunho'
     },
     it: {
-      title: 'Catalogo di icone', titleRoot: 'Icone di Wychwood', search: 'Cerca icone…', searchLabel: 'Cerca icone', folders: 'Cartelle', all: 'Tutte', icon: '{n} icona', icons: '{n} icone',
+      title: 'Catalogo di icone', search: 'Cerca icone…', searchLabel: 'Cerca icone', folders: 'Cartelle', all: 'Tutte', icon: '{n} icona', icons: '{n} icone',
       none: 'Nessun risultato.', allDone: 'Qui ogni icona ha un nome.', skip: 'Vai alle icone', contact: 'Contatto:', language: 'Lingua', copy: 'Copia', copied: 'Copiato', url: 'URL', path: 'Percorso', name: 'Nome',
       openTab: 'Apri in una nuova scheda', prev: 'Precedente', next: 'Successiva', close: 'Chiudi', untranslated: 'non tradotto', coverage: '{lang}: {pct} tradotto', notOpenTag: 'non ancora aperta',
       translate: 'Traduci', addIcon: 'Aggiungi un’icona', footShort: 'Progetto di fan non ufficiale', footRights: 'Diritti delle immagini', footContributing: 'Contribuisci', translating: 'Traduzione: {lang}', progress: '{done} di {total} con nome ({pct})',
@@ -159,7 +154,7 @@
       newLanguage: 'Inizia una nuova lingua…', newLanguageLabel: 'Inizia una nuova lingua', submit: 'Invia', submitCount: 'Invia {n}', done: 'Fine', folderName: 'Nome della cartella', draftTag: 'bozza'
     },
     pl: {
-      title: 'Katalog ikon', titleRoot: 'Ikony Wychwood', search: 'Szukaj ikon…', searchLabel: 'Szukaj ikon', folders: 'Foldery', all: 'Wszystkie', icon: 'Ikony: {n}', icons: 'Ikony: {n}',
+      title: 'Katalog ikon', search: 'Szukaj ikon…', searchLabel: 'Szukaj ikon', folders: 'Foldery', all: 'Wszystkie', icon: 'Ikony: {n}', icons: 'Ikony: {n}',
       none: 'Brak wyników.', allDone: 'Tutaj każda ikona ma nazwę.', skip: 'Przejdź do ikon', contact: 'Kontakt:', language: 'Język', copy: 'Kopiuj', copied: 'Skopiowano', url: 'URL', path: 'Ścieżka', name: 'Nazwa',
       openTab: 'Otwórz w nowej karcie', prev: 'Poprzednia', next: 'Następna', close: 'Zamknij', untranslated: 'bez tłumaczenia', coverage: '{lang}: przetłumaczono {pct}', notOpenTag: 'jeszcze nieotwarty',
       translate: 'Tłumacz', addIcon: 'Dodaj ikonę', footShort: 'Nieoficjalny projekt fanowski', footRights: 'Prawa do obrazów', footContributing: 'Współtworzenie', translating: 'Tłumaczenie: {lang}', progress: 'Nazwy: {done} z {total} ({pct})',
@@ -167,7 +162,7 @@
       newLanguage: 'Zacznij nowy język…', newLanguageLabel: 'Zacznij nowy język', submit: 'Wyślij', submitCount: 'Wyślij ({n})', done: 'Gotowe', folderName: 'Nazwa folderu', draftTag: 'szkic'
     },
     nl: {
-      title: 'Pictogramcatalogus', titleRoot: 'Wychwood-pictogrammen', search: 'Pictogrammen zoeken…', searchLabel: 'Pictogrammen zoeken', folders: 'Mappen', all: 'Alles', icon: '{n} pictogram', icons: '{n} pictogrammen',
+      title: 'Pictogramcatalogus', search: 'Pictogrammen zoeken…', searchLabel: 'Pictogrammen zoeken', folders: 'Mappen', all: 'Alles', icon: '{n} pictogram', icons: '{n} pictogrammen',
       none: 'Geen resultaten.', allDone: 'Hier heeft elk pictogram een naam.', skip: 'Naar de pictogrammen', contact: 'Contact:', language: 'Taal', copy: 'Kopiëren', copied: 'Gekopieerd', url: 'URL', path: 'Pad', name: 'Naam',
       openTab: 'In nieuw tabblad openen', prev: 'Vorige', next: 'Volgende', close: 'Sluiten', untranslated: 'niet vertaald', coverage: '{lang}: {pct} vertaald', notOpenTag: 'nog niet open',
       translate: 'Vertalen', addIcon: 'Pictogram toevoegen', footShort: 'Onofficieel fanproject', footRights: 'Beeldrechten', footContributing: 'Bijdragen', translating: 'Vertaling: {lang}', progress: '{done} van {total} benoemd ({pct})',
@@ -175,7 +170,7 @@
       newLanguage: 'Nieuwe taal beginnen…', newLanguageLabel: 'Nieuwe taal beginnen', submit: 'Versturen', submitCount: '{n} versturen', done: 'Klaar', folderName: 'Mapnaam', draftTag: 'concept'
     },
     cs: {
-      title: 'Katalog ikon', titleRoot: 'Ikony Wychwood', search: 'Hledat ikony…', searchLabel: 'Hledat ikony', folders: 'Složky', all: 'Vše', icon: 'Ikony: {n}', icons: 'Ikony: {n}',
+      title: 'Katalog ikon', search: 'Hledat ikony…', searchLabel: 'Hledat ikony', folders: 'Složky', all: 'Vše', icon: 'Ikony: {n}', icons: 'Ikony: {n}',
       none: 'Žádné výsledky.', allDone: 'Tady má každá ikona název.', skip: 'Přejít na ikony', contact: 'Kontakt:', language: 'Jazyk', copy: 'Kopírovat', copied: 'Zkopírováno', url: 'URL', path: 'Cesta', name: 'Název',
       openTab: 'Otevřít na nové kartě', prev: 'Předchozí', next: 'Další', close: 'Zavřít', untranslated: 'nepřeloženo', coverage: '{lang}: přeloženo {pct}', notOpenTag: 'zatím neotevřeno',
       translate: 'Překládat', addIcon: 'Přidat ikonu', footShort: 'Neoficiální fanouškovský projekt', footRights: 'Práva k obrázkům', footContributing: 'Přispívání', translating: 'Překlad: {lang}', progress: 'Názvy: {done} z {total} ({pct})',
@@ -183,7 +178,7 @@
       newLanguage: 'Začít nový jazyk…', newLanguageLabel: 'Začít nový jazyk', submit: 'Odeslat', submitCount: 'Odeslat ({n})', done: 'Hotovo', folderName: 'Název složky', draftTag: 'koncept'
     },
     uk: {
-      title: 'Каталог значків', titleRoot: 'Значки Wychwood', search: 'Шукати значки…', searchLabel: 'Шукати значки', folders: 'Теки', all: 'Усі', icon: 'Значки: {n}', icons: 'Значки: {n}',
+      title: 'Каталог значків', search: 'Шукати значки…', searchLabel: 'Шукати значки', folders: 'Теки', all: 'Усі', icon: 'Значки: {n}', icons: 'Значки: {n}',
       none: 'Нічого не знайдено.', allDone: 'Тут кожен значок має назву.', skip: 'Перейти до значків', contact: 'Контакт:', language: 'Мова', copy: 'Копіювати', copied: 'Скопійовано', url: 'URL', path: 'Шлях', name: 'Назва',
       openTab: 'Відкрити в новій вкладці', prev: 'Попередній', next: 'Наступний', close: 'Закрити', untranslated: 'не перекладено', coverage: '{lang}: перекладено {pct}', notOpenTag: 'ще не відкрито',
       translate: 'Перекласти', addIcon: 'Додати значок', footShort: 'Неофіційний фанатський проєкт', footRights: 'Права на зображення', footContributing: 'Як долучитися', translating: 'Переклад: {lang}', progress: 'Назви: {done} з {total} ({pct})',
@@ -191,7 +186,7 @@
       newLanguage: 'Почати нову мову…', newLanguageLabel: 'Почати нову мову', submit: 'Надіслати', submitCount: 'Надіслати ({n})', done: 'Готово', folderName: 'Назва теки', draftTag: 'чернетка'
     },
     ru: {
-      title: 'Каталог значков', titleRoot: 'Значки Wychwood', search: 'Искать значки…', searchLabel: 'Искать значки', folders: 'Папки', all: 'Все', icon: 'Значки: {n}', icons: 'Значки: {n}',
+      title: 'Каталог значков', search: 'Искать значки…', searchLabel: 'Искать значки', folders: 'Папки', all: 'Все', icon: 'Значки: {n}', icons: 'Значки: {n}',
       none: 'Ничего не найдено.', allDone: 'Здесь у каждого значка есть название.', skip: 'Перейти к значкам', contact: 'Контакт:', language: 'Язык', copy: 'Копировать', copied: 'Скопировано', url: 'URL', path: 'Путь', name: 'Название',
       openTab: 'Открыть в новой вкладке', prev: 'Предыдущий', next: 'Следующий', close: 'Закрыть', untranslated: 'не переведено', coverage: '{lang}: переведено {pct}', notOpenTag: 'ещё не открыт',
       translate: 'Перевести', addIcon: 'Добавить значок', footShort: 'Неофициальный фанатский проект', footRights: 'Права на изображения', footContributing: 'Как помочь', translating: 'Перевод: {lang}', progress: 'Названия: {done} из {total} ({pct})',
@@ -199,7 +194,7 @@
       newLanguage: 'Начать новый язык…', newLanguageLabel: 'Начать новый язык', submit: 'Отправить', submitCount: 'Отправить ({n})', done: 'Готово', folderName: 'Название папки', draftTag: 'черновик'
     },
     ja: {
-      title: 'アイコンカタログ', titleRoot: 'Wychwood アイコン', search: 'アイコンを検索…', searchLabel: 'アイコンを検索', folders: 'フォルダー', all: 'すべて', icon: '{n} 個のアイコン', icons: '{n} 個のアイコン',
+      title: 'アイコンカタログ', search: 'アイコンを検索…', searchLabel: 'アイコンを検索', folders: 'フォルダー', all: 'すべて', icon: '{n} 個のアイコン', icons: '{n} 個のアイコン',
       none: '結果はありません。', allDone: 'ここのアイコンにはすべて名前があります。', skip: 'アイコンへ移動', contact: '連絡先:', language: '言語', copy: 'コピー', copied: 'コピーしました', url: 'URL', path: 'パス', name: '名前',
       openTab: '新しいタブで開く', prev: '前へ', next: '次へ', close: '閉じる', untranslated: '未翻訳', coverage: '{lang}: {pct} 翻訳済み', notOpenTag: '未公開',
       translate: '翻訳する', addIcon: 'アイコンを追加', footShort: '非公式ファンプロジェクト', footRights: '画像の権利', footContributing: '貢献する', translating: '{lang} に翻訳中', progress: '{total} 件中 {done} 件 ({pct})',
@@ -207,7 +202,7 @@
       newLanguage: '新しい言語を始める…', newLanguageLabel: '新しい言語を始める', submit: '送信', submitCount: '{n} 件を送信', done: '完了', folderName: 'フォルダー名', draftTag: '下書き'
     },
     ko: {
-      title: '아이콘 카탈로그', titleRoot: 'Wychwood 아이콘', search: '아이콘 검색…', searchLabel: '아이콘 검색', folders: '폴더', all: '전체', icon: '아이콘 {n}개', icons: '아이콘 {n}개',
+      title: '아이콘 카탈로그', search: '아이콘 검색…', searchLabel: '아이콘 검색', folders: '폴더', all: '전체', icon: '아이콘 {n}개', icons: '아이콘 {n}개',
       none: '결과가 없습니다.', allDone: '여기 있는 아이콘은 모두 이름이 있습니다.', skip: '아이콘으로 건너뛰기', contact: '연락처:', language: '언어', copy: '복사', copied: '복사됨', url: 'URL', path: '경로', name: '이름',
       openTab: '새 탭에서 열기', prev: '이전', next: '다음', close: '닫기', untranslated: '번역 안 됨', coverage: '{lang}: {pct} 번역됨', notOpenTag: '아직 열리지 않음',
       translate: '번역하기', addIcon: '아이콘 추가', footShort: '비공식 팬 프로젝트', footRights: '이미지 권리', footContributing: '기여하기', translating: '{lang} 번역 중', progress: '{total}개 중 {done}개 ({pct})',
@@ -215,7 +210,7 @@
       newLanguage: '새 언어 시작…', newLanguageLabel: '새 언어 시작', submit: '보내기', submitCount: '{n}개 보내기', done: '완료', folderName: '폴더 이름', draftTag: '초안'
     },
     'zh-CN': {
-      title: '图标目录', titleRoot: 'Wychwood 图标', search: '搜索图标…', searchLabel: '搜索图标', folders: '文件夹', all: '全部', icon: '{n} 个图标', icons: '{n} 个图标',
+      title: '图标目录', search: '搜索图标…', searchLabel: '搜索图标', folders: '文件夹', all: '全部', icon: '{n} 个图标', icons: '{n} 个图标',
       none: '没有结果。', allDone: '这里的每个图标都有名称。', skip: '跳到图标', contact: '联系我:', language: '语言', copy: '复制', copied: '已复制', url: '网址', path: '路径', name: '名称',
       openTab: '在新标签页中打开', prev: '上一个', next: '下一个', close: '关闭', untranslated: '未翻译', coverage: '{lang}:已翻译 {pct}', notOpenTag: '尚未开放',
       translate: '翻译', addIcon: '添加图标', footShort: '非官方粉丝项目', footRights: '图片权利', footContributing: '参与贡献', translating: '正在翻译为{lang}', progress: '{total} 个中已命名 {done} 个 ({pct})',
@@ -223,7 +218,7 @@
       newLanguage: '开始新语言…', newLanguageLabel: '开始新语言', submit: '提交', submitCount: '提交 {n} 项', done: '完成', folderName: '文件夹名称', draftTag: '草稿'
     },
     'zh-TW': {
-      title: '圖示目錄', titleRoot: 'Wychwood 圖示', search: '搜尋圖示…', searchLabel: '搜尋圖示', folders: '資料夾', all: '全部', icon: '{n} 個圖示', icons: '{n} 個圖示',
+      title: '圖示目錄', search: '搜尋圖示…', searchLabel: '搜尋圖示', folders: '資料夾', all: '全部', icon: '{n} 個圖示', icons: '{n} 個圖示',
       none: '沒有結果。', allDone: '這裡的每個圖示都有名稱。', skip: '跳到圖示', contact: '聯絡我:', language: '語言', copy: '複製', copied: '已複製', url: '網址', path: '路徑', name: '名稱',
       openTab: '在新分頁中開啟', prev: '上一個', next: '下一個', close: '關閉', untranslated: '未翻譯', coverage: '{lang}:已翻譯 {pct}', notOpenTag: '尚未開放',
       translate: '翻譯', addIcon: '新增圖示', footShort: '非官方粉絲專案', footRights: '圖片權利', footContributing: '參與貢獻', translating: '正在翻譯為{lang}', progress: '{total} 個中已命名 {done} 個 ({pct})',
@@ -276,7 +271,6 @@
 
   function t(key, vars) {
     var table = ui();
-    if (key === 'searchRoot' && !own(table, key)) key = 'search';
     var text = own(table, key) ? table[key] : UI.en[key];
     return text.replace(/\{(\w+)\}/g, function (m, v) { return vars && own(vars, v) ? vars[v] : m; });
   }
@@ -465,33 +459,18 @@
   /* ---------- catalog tree ---------- */
 
   function build(dirs) {
-    var prefix = ROOT ? ROOT + '/' : '';
-    var english = own(names, 'en') ? names.en : {};
-    var inRoot = function (dir) { return dir === TRANSLATABLE_ROOT || dir.indexOf(TRANSLATABLE_ROOT + '/') === 0; };
-    var images = 0;
-    var named = 0;
-    Object.keys(dirs).filter(inRoot).forEach(function (dir) {
-      dirs[dir].forEach(function (file) {
-        images++;
-        if (own(english, dir + '/' + baseName(file))) named++;
-      });
-    });
-    var englishDecides = named * 2 >= images;
+    var prefix = ROOT + '/';
     Object.keys(dirs).sort().forEach(function (dir) {
-      if (dir === LEGACY_ROOT || dir.indexOf(LEGACY_ROOT + '/') === 0) return;
-      if (inRoot(dir)) {
-        dirs[dir].forEach(function (file) {
-          var imageKey = dir + '/' + baseName(file);
-          if (!TRANSLATABLE_EXT.test(file) || (englishDecides && !own(english, imageKey))) return;
-          known[imageKey] = true;
-          var keyPath = '';
-          dir.split('/').forEach(function (p) {
-            keyPath = keyPath ? keyPath + '/' + p : p;
-            known[keyPath] = true;
-          });
+      if (dir.indexOf(prefix) !== 0) return;
+      dirs[dir].forEach(function (file) {
+        if (!TRANSLATABLE_EXT.test(file)) return;
+        known[dir + '/' + baseName(file)] = true;
+        var keyPath = '';
+        dir.split('/').forEach(function (p) {
+          keyPath = keyPath ? keyPath + '/' + p : p;
+          known[keyPath] = true;
         });
-      }
-      if (prefix && dir.indexOf(prefix) !== 0) return;
+      });
       var rel = dir.slice(prefix.length);
       var node = root;
       var chain = [root];
@@ -548,8 +527,6 @@
     return Object.keys(node.kids).filter(function (k) {
       return !translating || node.kids[k].translatable;
     }).sort(function (a, b) {
-      if (a === TRANSLATABLE_ROOT) return -1;
-      if (b === TRANSLATABLE_ROOT) return 1;
       return node.kids[a].label.localeCompare(node.kids[b].label, lang);
     }).map(function (k) { return node.kids[k]; });
   }
@@ -745,7 +722,8 @@
       type: 'text', class: 'nm-in', dir: 'auto', spellcheck: false, autocomplete: 'off',
       value: hasDraft(it.key) ? draftsOf(lang)[it.key] : published(it.key),
       placeholder: fileName(it.file),
-      'aria-label': t('nameFor', { source: source, path: it.rel })
+      'aria-label': t('nameFor', { source: source, path: it.rel }),
+      'aria-keyshortcuts': 'Alt+Enter', title: t('previewKey')
     });
     input.dataset.key = it.key;
     var src = el('small', { class: 'src', title: it.rel }, [
@@ -903,10 +881,10 @@
     html.lang = own(UI, lang) ? lang : 'en';
     $('grid').lang = lang;
     $('tree').lang = lang;
-    var title = t(ROOT ? 'titleRoot' : 'title');
+    var title = t('title');
     document.title = title;
     $('title').textContent = title;
-    $('q').placeholder = t(ROOT ? 'searchRoot' : 'search');
+    $('q').placeholder = t('search');
     $('q').setAttribute('aria-label', t('searchLabel'));
     Array.prototype.forEach.call(document.querySelectorAll('[data-t]'), function (node) {
       if (!node.classList.contains('ok')) node.textContent = t(node.dataset.t);
@@ -1420,7 +1398,8 @@
     if (translating) {
       if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
         e.preventDefault();
-        moveFocus(e.target, e.shiftKey ? -1 : 1);
+        if (e.altKey) show(Number(e.target.closest('figure').dataset.i));
+        else moveFocus(e.target, e.shiftKey ? -1 : 1);
       }
       return;
     }
