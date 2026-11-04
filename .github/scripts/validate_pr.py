@@ -76,6 +76,8 @@ def path_problem(path):
 def owner_only_problem(path):
     if path.startswith('.github/'):
         return 'changes repository automation. Read this diff first: the checks themselves can be altered here. The owner merges exceptions by hand'
+    if path.startswith('deploy/'):
+        return 'changes the deploy scripts, which run with the CDN key after merging. The owner merges exceptions by hand'
     if '/' not in path:
         return 'changes a file at the repository root. The owner merges exceptions by hand'
     return None

@@ -125,6 +125,7 @@ VALIDATOR_CASES = [
     ('bad: root new file', [('catalog.js', '// x\n')], (), 'root', None),
     ('bad: root dotfile', [('.gitignore', 'x\n')], (), 'root', None),
     ('bad: root removal', [], ['index.html'], 'root', None),
+    ('bad: deploy change', [('deploy/publish.sh', 'x\n')], (), 'deploy scripts', None),
     ('flag: other folder', [('docs/x.md', 'x\n')], (), None, 'outside'),
     ('flag: wy_ prefix', [('icons/items/shop/wy_yeni.webp', webp())], (), None, 'reserved'),
     ('flag: wy_ prefix in a game folder', [('icons/items/gear/wy_yeni.webp', webp())], (), None, 'reserved'),
