@@ -1,7 +1,7 @@
 {
  "wychwood/items/shop/wy_absent": "Absent",
  "wychwood/items/shop/wy_anahtar": "Anahtar",
- "wychwood/items/shop/wy_asa": "Asa",
+ "wychwood/items/shop/wy_asa": "<b>Asa</b>",
  "wychwood/items/shop/wy_asit_lolipop": "Asit Lolipop",
  "wychwood/items/shop/wy_ayskop": "Ayskop",
  "wychwood/items/shop/wy_balkabagi_corbasi": "Balkabağı Çorbası",
@@ -100,5 +100,6 @@
  "wychwood/items/shop/wy_vurucu_sopasi": "Vurucu Sopası",
  "wychwood/items/shop/wy_yuzuk": "Yüzük",
  "wychwood/items/shop/wy_zarf_destesi": "Zarf Destesi",
- "wychwood/items/shop/wy_zencefilli_kurabiye": "Zencefilli Kurabiye"
+ "wychwood/items/shop/wy_zencefilli_kurabiye": "Zencefilli Kurabiye",
+ "wychwood/yok": "x"
 }
