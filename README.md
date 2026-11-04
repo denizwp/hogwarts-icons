@@ -7,7 +7,7 @@ Icon catalog and CDN for Hogwarts Legacy multiplayer projects. Browse it at <htt
 Files are served as they sit in this repository:
 
 ```
-https://cdn.tools.deniz.cyou/icons/items/shop/wy_key.webp
+https://cdn.tools.deniz.cyou/icons/items/tools/wy_key.webp
 ```
 
 ## Contributing

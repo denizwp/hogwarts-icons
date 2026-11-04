@@ -11,6 +11,8 @@ The MIT license of this repository does not cover images.
 | Contributed images, made by the contributor | Added by pull request, source stated there | Free for non-commercial projects, on the terms in [CONTRIBUTING.md](CONTRIBUTING.md) |
 | Contributed images, from the game or a mod | Added by pull request, source stated there | Belong to their owners. Not licensed by this project |
 
+The prefix decides, not the folder: category folders such as `icons/items/food/` hold `wy_*` and `UI_T_*` files side by side.
+
 Nothing here grants any right to the Harry Potter or Wizarding World names, characters or marks.
 
 Rights holders can request removal by opening an issue.

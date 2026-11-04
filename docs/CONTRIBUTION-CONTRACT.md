@@ -20,11 +20,11 @@ A flat JSON object, UTF-8, sorted by key, one space of indent, LF line endings:
 ```json
 {
  "icons/herbs/dittany": "Dittany",
- "icons/items/shop/wy_key": "Key"
+ "icons/items/tools/wy_key": "Key"
 }
 ```
 
-- A key is a repository path without the extension: an image (`icons/items/shop/wy_key` for `icons/items/shop/wy_key.webp`) or a folder that contains images (`icons/herbs/dittany`). Folder keys label the tree.
+- A key is a repository path without the extension: an image (`icons/items/tools/wy_key` for `icons/items/tools/wy_key.webp`) or a folder that contains images (`icons/herbs/dittany`). Folder keys label the tree.
 - A value is the display name. It is plain text; render it with `textContent`, never `innerHTML`.
 - Files are partial. A missing key is normal, and a missing file (404) means an empty translation.
 
@@ -35,6 +35,17 @@ Fallback for an image: the language's name, then what the site shows today (`pre
 ## Renamed images
 
 Images once lived under other paths. The old files stay on the CDN because deploys never delete, so old URLs keep working, and `/index.json` lists both until someone removes the old files by hand. The site shows only `icons/` (`ROOT` in `catalog.js`): other folders stay on the CDN and their direct URLs keep working. `docs.html` forwards to `/`. Names files use only the new paths.
+
+### Retired folders
+
+`icons/items/shop`, `items`, `rp` and `ui` were split into category folders under `icons/items/`, with the file names unchanged. The old copies stay on the CDN, because the game versions already released still use those URLs, so `/index.json` lists every moved image twice. Two places hold this list and must agree:
+
+- `RETIRED` in `catalog.js`: the site skips these folders, so each image appears once and the total is the number of images in the repository. An old link such as `#/items/shop` lands on `Items`, and `#/items/ui` on `items/coins`. A draft saved under an old key follows its file name to the new key.
+- `RETIRED_FOLDERS` in `.github/scripts/checks.py`: a pull request cannot add files there.
+
+The game itself stores bare icon names and looks up the folder, so its stored values did not change when the files moved.
+
+The rule is by folder and not by "has an English name", so a new image in a live folder shows at once, before anyone names it.
 
 ### `names/languages.json`
 
@@ -70,7 +81,7 @@ The issue title carries no data. The automation ignores it, so it can be anythin
 {
   "lang": "tr",
   "names": {
-    "icons/items/shop/wy_key": "Anahtar"
+    "icons/items/tools/wy_key": "Anahtar"
   }
 }
 ```
