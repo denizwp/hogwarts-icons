@@ -20,17 +20,21 @@ A flat JSON object, UTF-8, sorted by key, one space of indent, LF line endings:
 ```json
 {
  "wychwood/herbs/dittany": "Dittany",
- "wychwood/items/shop/wy_anahtar": "Key"
+ "wychwood/items/shop/wy_key": "Key"
 }
 ```
 
-- A key is a repository path without the extension: an image (`wychwood/items/shop/wy_anahtar` for `wychwood/items/shop/wy_anahtar.webp`) or a folder that contains images (`wychwood/herbs/dittany`). Folder keys label the tree.
+- A key is a repository path without the extension: an image (`wychwood/items/shop/wy_key` for `wychwood/items/shop/wy_key.webp`) or a folder that contains images (`wychwood/herbs/dittany`). Folder keys label the tree.
 - A value is the display name. It is plain text; render it with `textContent`, never `innerHTML`.
 - Files are partial. A missing key is normal, and a missing file (404) means an empty translation.
 
 Fallback for an image: the language's name, then what the site shows today (`pretty(file)` in English, the file name in Turkish). Do not fall back to another language unless the page says so.
 
-`names/tr.json` exists but is small. It holds only names where the game's own Turkish label is the file name with its spelling restored (`wy_anahtar` to `Anahtar`), so most Turkish icons still use the file name.
+`names/tr.json` exists but is small. It holds the game's own Turkish label for about 100 icons (`wy_key` to `Anahtar`). Other icons in Turkish fall back to the file name, which is English since the rename below.
+
+## Renamed images
+
+`renames.json` at the root maps every renamed image from its old path to its new path. The old files stay on the CDN because deploys never delete, so old URLs keep working, and `/index.json` lists both until someone removes the old files by hand. Names files use only the new paths.
 
 ### `names/languages.json`
 
@@ -66,7 +70,7 @@ The issue title carries no data. The automation ignores it, so it can be anythin
 {
   "lang": "tr",
   "names": {
-    "wychwood/items/shop/wy_anahtar": "Anahtar"
+    "wychwood/items/shop/wy_key": "Anahtar"
   }
 }
 ```
