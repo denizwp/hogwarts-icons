@@ -22,6 +22,8 @@ aside ul ul{padding-left:12px}
 .node .ct{color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
 main{flex:1;min-width:0;overflow:auto;padding:14px 16px 40px}
 main:focus{outline:none}
+.banner{display:block;max-width:960px;margin:0 auto 14px;border-radius:8px;overflow:hidden}
+.banner img{display:block;width:100%;height:auto;aspect-ratio:6/1}
 .bar{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-bottom:12px}
 .crumbs{display:flex;flex-wrap:wrap;gap:4px;font-size:13px}
 .crumbs button{border:0;background:transparent;padding:0;color:var(--accent);cursor:pointer}
@@ -91,6 +93,20 @@ dialog ::-webkit-scrollbar-thumb{border-color:var(--panel)}
 .tools + .contact{margin-left:0}
 select{max-width:100%;border:1px solid var(--line2);background:var(--panel);border-radius:8px;padding:6px 8px;font-size:13px;cursor:pointer}
 select:hover{border-color:var(--muted)}
+.menu{position:relative;min-width:0}
+.menu-btn{display:flex;align-items:center;gap:8px;width:100%;max-width:280px;min-height:32px;border:1px solid var(--line2);background:var(--panel);border-radius:8px;padding:5px 8px;font-size:13px;cursor:pointer;text-align:start}
+.menu-btn:hover,.menu-btn[aria-expanded=true]{border-color:var(--muted)}
+.menu-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu-car{color:var(--muted);font-size:10px}
+.flag{flex-shrink:0;width:20px;height:15px;border-radius:2px;object-fit:cover;box-shadow:0 0 0 1px rgb(255 255 255 / .12)}
+.menu-list{position:absolute;z-index:25;top:calc(100% + 4px);inset-inline-start:0;width:max-content;min-width:100%;max-width:min(320px,calc(100vw - 24px));max-height:min(528px,70dvh);overflow:auto;margin:0;padding:4px;list-style:none;border:1px solid var(--line2);background:var(--panel);border-radius:8px;box-shadow:0 12px 32px rgb(0 0 0 / .45)}
+.menu.up .menu-list{top:auto;bottom:calc(100% + 4px)}
+.menu-list:focus{outline:none}
+.menu-row{display:flex;align-items:center;gap:8px;min-height:32px;padding:5px 8px;border-radius:6px;font-size:13px;cursor:pointer}
+.menu-row.on{background:var(--line2)}
+.menu-row[aria-selected=true]{background:var(--accent2);color:var(--accent)}
+.menu-row[aria-selected=true].on{outline:1px solid var(--accent);outline-offset:-1px}
+.menu-list:focus-visible .menu-row.on{outline:2px solid var(--accent);outline-offset:-2px}
 .unt{color:var(--muted);font-weight:400;font-size:.8em;margin-inline-end:4px}
 .nm .unt{margin-inline:4px 0}
 .legend{color:var(--muted);font-size:12px}
@@ -152,7 +168,8 @@ textarea{width:100%;resize:vertical;padding:8px 10px;border-radius:8px;border:1p
   #toggle{display:inline-flex}
   #q{flex:1 1 100%;max-width:none;order:3}
   .tools{order:4;margin-left:0;flex:1 1 100%}
-  .tools select{flex:1 1 40%;min-width:0}
+  .tools .menu{flex:1 1 40%}
+  .tools .menu-btn{max-width:none}
   .contact{order:2;margin-left:0}
   .contact span{display:none}
   aside{visibility:hidden;transition:transform .2s,visibility .2s}
@@ -173,7 +190,7 @@ textarea{width:100%;resize:vertical;padding:8px 10px;border-radius:8px;border:1p
   .row input{flex-basis:100%}
 }
 @media (pointer:coarse){
-  .btn,select,#q,.row button,.nm-in,.row input{min-height:44px}
+  .btn,select,#q,.row button,.nm-in,.row input,.menu-btn,.menu-row{min-height:44px}
   .icon-btn{width:44px;height:44px}
   .node{min-height:40px}
   .check{min-height:44px}
