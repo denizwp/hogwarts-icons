@@ -51,10 +51,10 @@ class Repo:
         self.git('config', 'user.name', 'selftest')
         self.git('config', 'core.autocrlf', 'false')
         self.git('config', 'core.protectNTFS', 'false')
-        self.write('icons/items/shop/wy_anahtar.webp', webp())
+        self.write('icons/items/tools/wy_anahtar.webp', webp())
         self.write('icons/herbs/dittany/olgun.webp', webp(600, 1200))
-        self.write('names/en.json', json.dumps({'icons/items/shop/wy_anahtar': 'Key', 'icons/herbs': 'Herbs'}, indent=1) + '\n')
-        self.write('names/tr.json', json.dumps({'icons/items/shop/wy_anahtar': 'Anahtar'}, indent=1, ensure_ascii=False) + '\n')
+        self.write('names/en.json', json.dumps({'icons/items/tools/wy_anahtar': 'Key', 'icons/herbs': 'Herbs'}, indent=1) + '\n')
+        self.write('names/tr.json', json.dumps({'icons/items/tools/wy_anahtar': 'Anahtar'}, indent=1, ensure_ascii=False) + '\n')
         self.write('names/languages.json', json.dumps({'en': 'English', 'tr': 'Türkçe'}, ensure_ascii=False) + '\n')
         self.write('index.html', '<!doctype html>\n')
         self.git('add', '-A')
@@ -102,8 +102,8 @@ def names_json(data):
     return json.dumps(data, ensure_ascii=False, indent=1) + '\n'
 
 
-KEY = 'icons/items/shop/wy_anahtar'
-GOOD_IMAGE = 'icons/items/shop/yeni_ikon.webp'
+KEY = 'icons/items/tools/wy_anahtar'
+GOOD_IMAGE = 'icons/items/tools/yeni_ikon.webp'
 VALIDATOR_CASES = [
     # (title, entries, removals, expected error text or None, expected warning text or None)
     ('good: new icon', [(GOOD_IMAGE, webp())], (), None, None),
@@ -111,7 +111,7 @@ VALIDATOR_CASES = [
     ('good: VP8X with alpha', [(GOOD_IMAGE, riff(vp8x(128, 128, 0x10), (b'ALPH', b'\0\0'), vp8l()))], (), None, None),
     ('good: large artwork', [('icons/cards/frame/yeni.webp', webp(750, 1050))], (), None, None),
     ('good: names edit', [('names/tr.json', names_json({KEY: 'Anahtar deneme'}))], (), None, None),
-    ('good: new image plus its name', [(GOOD_IMAGE, webp()), ('names/en.json', names_json({KEY: 'Key', 'icons/items/shop/yeni_ikon': 'New'}))], (), None, None),
+    ('good: new image plus its name', [(GOOD_IMAGE, webp()), ('names/en.json', names_json({KEY: 'Key', 'icons/items/tools/yeni_ikon': 'New'}))], (), None, None),
     ('good: folder key', [('names/tr.json', names_json({'icons/herbs': 'Otlar', KEY: 'Anahtar'}))], (), None, None),
     ('good: bare ampersand', [('names/en.json', names_json({KEY: 'Currency & Chests'}))], (), None, None),
     ('good: translation bot names only', [('names/tr.json', names_json({'icons/herbs/dittany/olgun': 'Olgun', KEY: 'Anahtar'}))], (), None, None),
@@ -127,19 +127,21 @@ VALIDATOR_CASES = [
     ('bad: root removal', [], ['index.html'], 'root', None),
     ('bad: deploy change', [('deploy/publish.sh', 'x\n')], (), 'deploy scripts', None),
     ('flag: other folder', [('docs/x.md', 'x\n')], (), None, 'outside'),
-    ('flag: wy_ prefix', [('icons/items/shop/wy_yeni.webp', webp())], (), None, 'reserved'),
+    ('flag: wy_ prefix', [('icons/items/tools/wy_yeni.webp', webp())], (), None, 'reserved'),
     ('flag: wy_ prefix in a game folder', [('icons/items/gear/wy_yeni.webp', webp())], (), None, 'reserved'),
-    ('flag: UI_T_ file in shop', [('icons/items/shop/UI_T_New.webp', webp())], (), None, 'belong'),
+    ('good: UI_T_ file in a category folder', [('icons/items/tools/UI_T_New.webp', webp())], (), None, None),
+    ('bad: new file in a retired folder', [('icons/items/shop/yeni_ikon.webp', webp())], (), 'split up', None),
+    ('bad: new file in another retired folder', [('icons/items/rp/UI_T_New.webp', webp())], (), 'split up', None),
     ('flag: MOD_ file in cards', [('icons/items/cards/MOD_New.webp', webp())], (), None, 'belong'),
     ('flag: UI_T_ file in artwork', [('icons/lobby/UI_T_New.webp', webp(580, 340))], (), None, 'belong'),
     ('flag: metadata chunk', [(GOOD_IMAGE, riff(vp8x(128, 128), vp8l(), (b'EXIF', b'abcd')))], (), None, 'extra data'),
     ('flag: language list', [('names/languages.json', names_json({'en': 'English', 'tr': 'Türkçe', 'de': 'Deutsch'}))], (), None, 'languages'),
-    ('bad: png under icons', [('icons/items/shop/a.png', b'\x89PNG\r\n\x1a\n')], (), 'only .webp', None),
+    ('bad: png under icons', [('icons/items/tools/a.png', b'\x89PNG\r\n\x1a\n')], (), 'only .webp', None),
     ('bad: svg under icons', [('icons/x.svg', '<svg onload="alert(1)"/>')], (), 'only .webp', None),
     ('bad: html under icons', [('icons/x.html', '<script>1</script>')], (), 'only .webp', None),
     ('bad: png renamed .webp', [(GOOD_IMAGE, b'\x89PNG\r\n\x1a\n' + b'\0' * 64)], (), 'not a WebP', None),
     ('bad: html renamed .webp', [(GOOD_IMAGE, b'<html><script>alert(1)</script></html>')], (), 'not a WebP', None),
-    ('bad: upper case .WEBP', [('icons/items/shop/a.WEBP', webp())], (), 'only .webp', None),
+    ('bad: upper case .WEBP', [('icons/items/tools/a.WEBP', webp())], (), 'only .webp', None),
     ('bad: data appended', [(GOOD_IMAGE, webp() + b'<script>alert(1)</script>')], (), 'appended', None),
     ('bad: cut short', [(GOOD_IMAGE, webp()[:-10])], (), 'cut short', None),
     ('bad: chunk past the end', [(GOOD_IMAGE, b'RIFF' + struct.pack('<I', 16) + b'WEBPVP8L' + struct.pack('<I', 9999) + b'\x2f\0\0\0')], (), 'past the end', None),
@@ -150,13 +152,13 @@ VALIDATOR_CASES = [
     ('bad: artwork too many pixels', [('icons/cards/huge.webp', webp(4000, 4000))], (), 'too large', None),
     ('bad: artwork too many bytes', [('icons/cards/huge.webp', webp(750, 1050, 600 * 1024))], (), 'bytes', None),
     ('bad: too small', [(GOOD_IMAGE, webp(8, 8))], (), 'too small', None),
-    ('bad: space in path', [('icons/items/shop/a b.webp', webp())], (), 'unsafe', None),
-    ('bad: unicode in path', [('icons/items/shop/şapka.webp', webp())], (), 'unsafe', None),
+    ('bad: space in path', [('icons/items/tools/a b.webp', webp())], (), 'unsafe', None),
+    ('bad: unicode in path', [('icons/items/tools/şapka.webp', webp())], (), 'unsafe', None),
     ('bad: dots in path', [('icons/items/..evil/a.webp', webp())], (), '..', None),
     ('bad: hidden folder', [('icons/.hidden/a.webp', webp())], (), 'unsafe', None),
     ('bad: Windows name', [('icons/items/aux.webp', webp())], (), 'reserved', None),
-    ('bad: case collision', [('icons/items/shop/WY_ANAHTAR.webp', webp())], (), 'upper or lower', None),
-    ('bad: symlink', [('icons/items/shop/link.webp', '/etc/passwd', '120000')], (), 'symbolic', None),
+    ('bad: case collision', [('icons/items/tools/WY_ANAHTAR.webp', webp())], (), 'upper or lower', None),
+    ('bad: symlink', [('icons/items/tools/link.webp', '/etc/passwd', '120000')], (), 'symbolic', None),
     ('bad: executable', [(GOOD_IMAGE, webp(), '100755')], (), 'executable', None),
     ('bad: removes image', [], [KEY + '.webp'], 'removing', None),
     ('bad: removes names', [], ['names/tr.json'], 'removing', None),
@@ -167,7 +169,7 @@ VALIDATOR_CASES = [
     ('bad: names number value', [('names/tr.json', names_json({KEY: 5}))], (), 'must be a string', None),
     ('bad: names nested value', [('names/tr.json', names_json({KEY: {'a': 'b'}}))], (), 'must be a string', None),
     ('bad: duplicate key', [('names/tr.json', '{"%s": "a", "%s": "b"}' % (KEY, KEY))], (), 'duplicate', None),
-    ('bad: unknown key', [('names/tr.json', names_json({'icons/items/shop/yok': 'x'}))], (), 'unknown key', None),
+    ('bad: unknown key', [('names/tr.json', names_json({'icons/items/tools/yok': 'x'}))], (), 'unknown key', None),
     ('bad: key with extension', [('names/tr.json', names_json({KEY + '.webp': 'x'}))], (), 'unknown key', None),
     ('bad: proto key', [('names/tr.json', names_json({'__proto__': 'x'}))], (), 'unknown key', None),
     ('bad: html value', [('names/tr.json', names_json({KEY: '<img src=x onerror=alert(1)>'}))], (), 'no HTML', None),
@@ -292,6 +294,9 @@ def scan_real_files():
             print('FAIL', path, errors, problem)
         warned += bool(warnings)
     print(f'{len(paths) - failed}/{len(paths)} images pass, {warned} carry extra data chunks')
+    retired = [path for path in paths if path.startswith(checks.RETIRED_FOLDERS)]
+    failed += len(retired)
+    print(f'{"ok  " if not retired else "FAIL"} {len(retired)} images in retired folders')
     keys = checks.known_keys(paths)
     names_dir = os.path.join(root, 'names')
     for name in sorted(os.listdir(names_dir)):

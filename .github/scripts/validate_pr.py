@@ -20,7 +20,7 @@ WINDOWS_RESERVED = re.compile(r'(con|prn|aux|nul|com[0-9]|lpt[0-9])(\..*)?', re.
 FORBIDDEN = re.compile(r'(^|/)(\.cdn-guncelle\.sh|cdn-guncelle\.bat|index\.json|[^/]*\.zip)$', re.I)
 PROJECT_PREFIX = re.compile(r'^wy_', re.I)
 SOURCE_PREFIX = re.compile(r'^(UI_T_|MOD_)', re.I)
-SOURCE_FOLDER = re.compile(r'^icons/items/(?!shop/|cards/)[^/]+/')
+SOURCE_FOLDER = re.compile(r'^icons/items/(?!cards/)[^/]+/')
 
 
 class Report:
@@ -174,6 +174,8 @@ def validate(repo, base, head):
                 continue
             if mode != '100644':
                 report.error(path, 'the file must not be executable')
+            if path.startswith(checks.RETIRED_FOLDERS):
+                report.error(path, 'this folder was split up: use a category folder, see CONTRIBUTING.md')
             existing = base_tree.get(path)
             if status == 'M' or (existing and existing[1] != sha):
                 report.error(path, 'REPLACES an existing image at a URL games already use. The owner merges exceptions by hand')
@@ -182,7 +184,7 @@ def validate(repo, base, head):
                 if PROJECT_PREFIX.match(file_name):
                     report.warn(path, 'new file with the wy_ prefix, which is reserved for this project')
                 elif SOURCE_PREFIX.match(file_name) and not SOURCE_FOLDER.match(path):
-                    report.warn(path, 'UI_T_ and MOD_ files belong in a folder under icons/items/, not in shop, cards or the artwork folders')
+                    report.warn(path, 'UI_T_ and MOD_ files belong in a folder under icons/items/, not in cards or the artwork folders')
             limits = checks.limits_for(path)
             if size > limits['bytes']:
                 report.error(path, f'{size} bytes, the limit here is {limits["bytes"]}')

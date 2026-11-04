@@ -6,6 +6,9 @@
   var NAME_LIMIT = 120;
   // The site shows this folder only. The CDN holds other folders too; their direct URLs keep working.
   var ROOT = 'icons';
+  // Folders split into category folders. Their old copies stay on the CDN and /index.json still lists them, so the site skips them.
+  // Each value is where an old link to the folder lands.
+  var RETIRED = { 'items/shop': 'items', 'items/items': 'items', 'items/rp': 'items', 'items/ui': 'items/coins' };
   var TRANSLATABLE_EXT = /\.webp$/;
   var CHUNK = 240;
   var STORE_LANG = 'hogwarts-icons.lang';
@@ -402,6 +405,25 @@
     if (changed) saveDrafts();
   }
 
+  // A draft saved under a retired folder follows its file to the category folder.
+  function moveDrafts() {
+    var byFile = {};
+    items.forEach(function (it) { byFile[baseName(it.file)] = it.key; });
+    var moved = false;
+    Object.keys(drafts).forEach(function (code) {
+      Object.keys(drafts[code]).forEach(function (key) {
+        var slash = key.lastIndexOf('/');
+        var file = key.slice(slash + 1);
+        if (!own(RETIRED, key.slice(ROOT.length + 1, slash)) || !own(byFile, file)) return;
+        drafts[code][byFile[file]] = drafts[code][key];
+        delete drafts[code][key];
+        moved = true;
+      });
+      pruneDrafts(code);
+    });
+    if (moved) saveDrafts();
+  }
+
   function setDraft(key, raw) {
     var value = raw.trim();
     var entries = own(drafts, lang) ? drafts[lang] : (drafts[lang] = {});
@@ -481,6 +503,7 @@
     try { path = decodeURIComponent(path); } catch (e) { path = ''; }
     var params = new URLSearchParams(i < 0 ? '' : h.slice(i + 1));
     state.node = path.replace(/\/+$/, '');
+    if (own(RETIRED, state.node)) state.node = RETIRED[state.node];
     state.q = params.get('q') || '';
     return params;
   }
@@ -497,7 +520,7 @@
   function build(dirs) {
     var prefix = ROOT + '/';
     Object.keys(dirs).sort().forEach(function (dir) {
-      if (dir.indexOf(prefix) !== 0) return;
+      if (dir.indexOf(prefix) !== 0 || own(RETIRED, dir.slice(prefix.length))) return;
       dirs[dir].forEach(function (file) {
         if (!TRANSLATABLE_EXT.test(file)) return;
         known[dir + '/' + baseName(file)] = true;
@@ -1635,6 +1658,7 @@
   Promise.all([fetch(BASE + 'index.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }), languagesReady])
     .then(function (results) {
       build(results[0].dirs || {});
+      moveDrafts();
       loaded = true;
       translating = params.get('translate') === '1';
       document.body.classList.toggle('translating', translating);

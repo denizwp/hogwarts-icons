@@ -13,6 +13,8 @@ IMAGE_ROOT = 'icons/'
 NAMES_DIR = 'names/'
 LANGUAGES_FILE = 'names/languages.json'
 IMAGE_EXT = '.webp'
+# Split into category folders. The old copies stay on the CDN for games that still use those URLs.
+RETIRED_FOLDERS = ('icons/items/shop/', 'icons/items/items/', 'icons/items/rp/', 'icons/items/ui/')
 
 LANG_RE = re.compile(r'[a-z]{2,3}(-[A-Z]{2})?')
 NAME_MAX = 120
