@@ -7,7 +7,9 @@
   // The repository's automation only accepts names for images it tracks. The CDN also lists other folders, and old
   // paths stay there after a rename because deploys never delete. So when names/en.json covers most images, an image
   // without an English entry is not offered for translation; otherwise the path rules alone decide.
-  var TRANSLATABLE_ROOT = 'wychwood';
+  var TRANSLATABLE_ROOT = 'icons';
+  // Old top folder: stays on the CDN for old game code, not shown in the catalog
+  var LEGACY_ROOT = 'wychwood';
   var TRANSLATABLE_EXT = /\.webp$/;
   var CHUNK = 240;
   var ROOT = document.documentElement.dataset.root || '';
@@ -64,7 +66,7 @@
       helpTranslateGo: 'Start translating',
       helpIconTitle: 'Add an icon',
       helpIcon: 'Icons are added by pull request, and the owner reviews every one.',
-      helpIconSteps: ['Fork the repository and create a branch.', 'Add .webp files in the folder under wychwood/ that fits. Most icons belong in wychwood/items/.', 'Open a pull request and fill in the template.'],
+      helpIconSteps: ['Fork the repository and create a branch.', 'Add .webp files in the folder under icons/ that fits. Most icons belong in icons/items/.', 'Open a pull request and fill in the template.'],
       helpIconTerms: 'Send only what you made or hold the rights to, and say so if an AI tool made any of it. Ask in an issue first before sending files extracted from the game. Size limits and naming rules are in CONTRIBUTING.md.',
       helpIconGo: 'Read CONTRIBUTING.md', helpRepo: 'Open the repository',
       helpRightsTitle: 'Rights',
@@ -109,7 +111,7 @@
       helpTranslateGo: 'Çeviriye başla',
       helpIconTitle: 'İkon ekle',
       helpIcon: 'İkonlar pull request ile eklenir, sahibi her birini inceler.',
-      helpIconSteps: ['Depoyu fork’la ve bir dal aç.', 'wychwood/ altında uygun klasöre .webp dosyalarını ekle. Çoğu ikon wychwood/items/ içine girer.', 'Pull request aç ve şablonu doldur.'],
+      helpIconSteps: ['Depoyu fork’la ve bir dal aç.', 'icons/ altında uygun klasöre .webp dosyalarını ekle. Çoğu ikon icons/items/ içine girer.', 'Pull request aç ve şablonu doldur.'],
       helpIconTerms: 'Yalnızca kendi yaptığın ya da hakkına sahip olduğun görselleri gönder, bir kısmını yapay zekâ aracı yaptıysa belirt. Oyundan çıkarılmış dosyaları göndermeden önce issue açıp sor. Boyut sınırları ve adlandırma kuralları CONTRIBUTING.md dosyasında.',
       helpIconGo: 'CONTRIBUTING.md dosyasını oku', helpRepo: 'Depoyu aç',
       helpRightsTitle: 'Haklar',
@@ -476,6 +478,7 @@
     });
     var englishDecides = named * 2 >= images;
     Object.keys(dirs).sort().forEach(function (dir) {
+      if (dir === LEGACY_ROOT || dir.indexOf(LEGACY_ROOT + '/') === 0) return;
       if (inRoot(dir)) {
         dirs[dir].forEach(function (file) {
           var imageKey = dir + '/' + baseName(file);
@@ -545,8 +548,8 @@
     return Object.keys(node.kids).filter(function (k) {
       return !translating || node.kids[k].translatable;
     }).sort(function (a, b) {
-      if (a === 'wychwood') return -1;
-      if (b === 'wychwood') return 1;
+      if (a === TRANSLATABLE_ROOT) return -1;
+      if (b === TRANSLATABLE_ROOT) return 1;
       return node.kids[a].label.localeCompare(node.kids[b].label, lang);
     }).map(function (k) { return node.kids[k]; });
   }
