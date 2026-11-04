@@ -1,6 +1,6 @@
 # Hogwarts Icons
 
-Icon catalog and CDN for Hogwarts Legacy multiplayer projects, started for the Wychwood server. Browse it at <https://cdn.tools.deniz.cyou>.
+Icon catalog and CDN for Hogwarts Legacy multiplayer projects. Browse it at <https://cdn.tools.deniz.cyou>.
 
 ## Using an icon
 

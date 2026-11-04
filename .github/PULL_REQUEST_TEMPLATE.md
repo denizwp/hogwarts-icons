@@ -6,7 +6,7 @@
 
 <!-- Delete this section if the pull request has no images. Tick every source that applies, and list files per source if they differ. -->
 
-- [ ] **Made by me:** I made these images or hold the rights to them, and Wychwood and anyone else may use them in non-commercial projects.
+- [ ] **Made by me:** I made these images or hold the rights to them, and anyone may use them in non-commercial projects.
 - [ ] **From the game:** files from Hogwarts Legacy. This project does not license them and their rights stay with their owners.
 - [ ] **From a mod:** files from a mod, named below. This project does not license them and their rights stay with their owners.
 

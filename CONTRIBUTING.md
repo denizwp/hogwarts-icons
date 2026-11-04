@@ -6,7 +6,7 @@ You can add icons by pull request and translate icon names into your language. T
 
 In the pull request, state where each image came from:
 
-- **Made by me:** you made the image or hold the rights to it, and Wychwood and anyone else may use it in non-commercial projects. If an AI tool made the image or part of it, say so. AI-made images are allowed when declared.
+- **Made by me:** you made the image or hold the rights to it, and anyone may use it in non-commercial projects. If an AI tool made the image or part of it, say so. AI-made images are allowed when declared.
 - **From the game:** a file from Hogwarts Legacy.
 - **From a mod:** a file from a mod. Name the mod.
 
