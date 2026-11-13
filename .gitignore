@@ -5,6 +5,8 @@ cdn-guncelle.bat
 *.zip
 # CDN'de sunucunun urettigi liste
 index.json
+# Buyuk harita parcalari (wychwood tools/maprender): dogrudan sunucuya yuklenir, depoya girmez
+map/
 .DS_Store
 Thumbs.db
 __pycache__/

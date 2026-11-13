@@ -16,7 +16,7 @@ case "${SSH_ORIGINAL_COMMAND:-}" in
     ;;
   cdn-reindex)
     cd "$SERVE"
-    find . -mindepth 2 -type f \( -iname '*.png' -o -iname '*.webp' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.gif' -o -iname '*.svg' \) -printf '%h\t%f\n' \
+    find . -mindepth 2 -type f -not -path "./map/*" \(-iname '*.png' -o -iname '*.webp' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.gif' -o -iname '*.svg' \) -printf '%h\t%f\n' \
       | sed 's|^\./||' | LC_ALL=C sort \
       | awk -F'\t' '
           function q(s) { gsub(/\\/, "\\\\", s); gsub(/"/, "\\\"", s); return "\"" s "\"" }
