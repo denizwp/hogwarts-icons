@@ -7,6 +7,8 @@ cdn-guncelle.bat
 index.json
 # Buyuk harita parcalari (wychwood tools/maprender): dogrudan sunucuya yuklenir, depoya girmez
 map/
+# Oyundan cikarilmis sesler (Secmen Sapka): dogrudan sunucuya yuklenir, depoya girmez
+audio/
 .DS_Store
 Thumbs.db
 __pycache__/
