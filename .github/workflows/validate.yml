@@ -2,9 +2,10 @@ name: Validate
 
 # Only pull_request, never pull_request_target: a fork gets a read-only token and no secrets.
 # The pull request is fetched as git objects and read as data. It is not checked out or run.
+# review.yml runs after this one with a write token and leaves the result on the pull request.
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, edited]
 
 permissions:
   contents: read
@@ -25,8 +26,9 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: git fetch --no-tags --no-recurse-submodules origin "$HEAD_SHA"
 
+      # The description is read from the event file by the script, never placed in a command.
       - name: Validate with the base branch rules
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: python3 -I .github/scripts/validate_pr.py --base "$BASE_SHA" --head "$HEAD_SHA"
+        run: python3 -I .github/scripts/validate_pr.py --base "$BASE_SHA" --head "$HEAD_SHA" --event "$GITHUB_EVENT_PATH"

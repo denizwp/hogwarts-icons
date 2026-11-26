@@ -51,7 +51,8 @@ class Repo:
         self.git('config', 'user.name', 'selftest')
         self.git('config', 'core.autocrlf', 'false')
         self.git('config', 'core.protectNTFS', 'false')
-        self.write('icons/items/tools/wy_anahtar.webp', webp())
+        self.write('icons/items/tools/wy_anahtar.webp', webp(128, 128, 41))
+        self.write('.github/data/game-icons.txt', 'Items\tUI_T_New\nPotions\tUI_T_HorklumpJuice\n')
         self.write('icons/herbs/dittany/olgun.webp', webp(600, 1200))
         self.write('names/en.json', json.dumps({'icons/items/tools/wy_anahtar': 'Key', 'icons/herbs': 'Herbs'}, indent=1) + '\n')
         self.write('names/tr.json', json.dumps({'icons/items/tools/wy_anahtar': 'Anahtar'}, indent=1, ensure_ascii=False) + '\n')
@@ -164,6 +165,12 @@ VALIDATOR_CASES = [
     ('bad: removes names', [], ['names/tr.json'], 'removing', None),
     ('bad: secret script', [('.cdn-guncelle.sh', 'x\n')], (), 'never enter', None),
     ('bad: zip', [('wychwood.zip', b'PK')], (), 'never enter', None),
+    ('bad: copy of an existing image', [('icons/items/food/kopya.webp', webp(128, 128, 41))], (), 'the same file as', None),
+    ('bad: two copies in one pull request', [('icons/items/food/a.webp', webp(128, 128, 50)), ('icons/items/food/b.webp', webp(128, 128, 50))], (), 'the same file as', None),
+    ('bad: UI_T_ name the game does not have', [('icons/items/potions/UI_T_Horklump_Juice.webp', webp())], (), 'no icon by this name', None),
+    ('good: UI_T_ name in any case', [('icons/items/potions/ui_t_horklumpjuice.webp', webp())], (), None, None),
+    ('flag: game keeps it in another folder', [('icons/items/ingredients/UI_T_HorklumpJuice.webp', webp())], (), None, 'may belong in icons/items/potions'),
+    ('good: UI_T_ beard made here', [('icons/items/beards/UI_T_M_Facial_New.webp', webp())], (), None, None),
     ('bad: names not JSON', [('names/tr.json', '{not json')], (), 'not valid JSON', None),
     ('bad: names is a list', [('names/tr.json', '["a"]')], (), 'JSON object', None),
     ('bad: names number value', [('names/tr.json', names_json({KEY: 5}))], (), 'must be a string', None),
@@ -185,6 +192,34 @@ VALIDATOR_CASES = [
     ('bad: non-JSON in names', [('names/tr.txt', 'x')], (), 'names/ holds only', None),
     ('bad: language list loses en', [('names/languages.json', names_json({'tr': 'Türkçe'}))], (), 'en must stay', None),
     ('bad: injected workflow command in key', [('names/tr.json', names_json({'::set-output name=x::y': 'z'}))], (), 'unknown key', None),
+]
+
+
+TEMPLATE = open(os.path.join(HERE, '..', 'PULL_REQUEST_TEMPLATE.md'), encoding='utf-8').read()
+
+
+def described(made=False, game=False, mod=False, ai='', credit=''):
+    text = TEMPLATE
+    for flag, label in ((made, 'Made by me'), (game, 'From the game'), (mod, 'From a mod')):
+        if flag:
+            text = text.replace(f'- [ ] **{label}', f'- [x] **{label}')
+    text = text.replace('AI tools: ', f'AI tools: {ai} ', 1)
+    return text.replace('Mod, source or credit: ', f'Mod, source or credit: {credit} ', 1)
+
+
+TEMPLATE_CASES = [
+    # (title, entries, body, expected error text or None)
+    ('good: made by me, no AI', [(GOOD_IMAGE, webp())], described(made=True, ai='None'), None),
+    ('good: game file', [('icons/items/tools/UI_T_New.webp', webp())], described(game=True, ai='None'), None),
+    ('good: mod named', [('icons/items/tools/MOD_New.webp', webp())], described(mod=True, ai='None', credit='Some Mod, nexusmods.com/x'), None),
+    ('good: names only, empty template', [('names/tr.json', names_json({KEY: 'Anahtar deneme'}))], TEMPLATE, None),
+    ('bad: empty template', [(GOOD_IMAGE, webp())], TEMPLATE, 'where the images came from'),
+    ('bad: no description at all', [(GOOD_IMAGE, webp())], '', 'where the images came from'),
+    ('bad: AI line empty', [(GOOD_IMAGE, webp())], described(made=True), 'AI tools line is empty'),
+    ('bad: mod not named', [(GOOD_IMAGE, webp())], described(mod=True, ai='None'), 'mod is not named'),
+    ('bad: UI_T_ without the game box', [('icons/items/tools/UI_T_New.webp', webp())], described(made=True, ai='None'), 'tick From the game'),
+    ('bad: MOD_ without the mod box', [('icons/items/tools/MOD_New.webp', webp())], described(made=True, ai='None'), 'tick From a mod'),
+    ('bad: tick inside a comment does not count', [(GOOD_IMAGE, webp())], TEMPLATE + '\n<!--\n- [x] **Made by me**\nAI tools: None\n-->\n', 'where the images came from'),
 ]
 
 
@@ -243,6 +278,19 @@ def run_validator(repo):
         shown = errors or warnings or 'clean'
         print(f'{"ok  " if good else "FAIL"} {title:40} {shown[:96]}')
     return failed, len(VALIDATOR_CASES)
+
+
+def run_template(repo):
+    print('--- description template ---')
+    failed = 0
+    for title, entries, body, want_error in TEMPLATE_CASES:
+        head = repo.case(entries)
+        report, _ = validate_pr.validate(repo.path, 'main', head, body)
+        errors = ' | '.join(message for _, message in report.errors)
+        good = want_error in errors if want_error else not errors
+        failed += not good
+        print(f'{"ok  " if good else "FAIL"} {title:40} {(errors or "clean")[:96]}')
+    return failed, len(TEMPLATE_CASES)
 
 
 def run_translation(repo):
@@ -312,7 +360,7 @@ def main():
     repo = Repo()
     total_failed = 0
     try:
-        for step in (run_validator, run_translation):
+        for step in (run_validator, run_template, run_translation):
             failed, count = step(repo)
             total_failed += failed
             print(f'{count - failed}/{count} as expected\n')

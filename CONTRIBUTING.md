@@ -71,10 +71,16 @@ The folders `icons/items/shop`, `items`, `rp` and `ui` are retired: nothing new 
 
 ### Automated check
 
-Every pull request runs `.github/workflows/validate.yml`. It reads your files as data and checks the rules above. To run the same check locally:
+Every pull request runs `.github/workflows/validate.yml`. It reads your files as data and checks the rules above, and also:
+
+- **The template:** when you add images, a source box is ticked and the AI tools line is filled in. A ticked From a mod needs the mod named, `UI_T_` files need From the game, `MOD_` files need From a mod.
+- **Copies:** a new image may not be the same file as one already in the repository or another one in the same pull request.
+- **Game names:** a new `UI_T_` file under `icons/items/` must carry the name of an icon the game has (`.github/data/game-icons.txt`, from a scan of the game files). When the game keeps that icon with its potions, ingredients or plants, the check suggests that folder.
+
+`.github/workflows/review.yml` then leaves the result as a comment on the pull request and requests changes while something is left to fix. Push a fix or edit the description and it checks again. To run the same check locally:
 
 ```
-python .github/scripts/validate_pr.py --base origin/main --head HEAD
+python .github/scripts/validate_pr.py --base origin/main --head HEAD --body-file description.md
 ```
 
 It reads file headers and does not look at the picture itself, so the owner still does.

@@ -27,6 +27,13 @@ MIN_SIDE = 32
 ICON_LIMITS = {'bytes': 64 * 1024, 'side': 512, 'pixels': 512 * 512}
 ART_LIMITS = {'bytes': 512 * 1024, 'side': 1600, 'pixels': 1500000}
 
+# Every UI_T_ texture name in Hogwarts Legacy as "<game folder>\t<name>", from a scan of the game's paks.
+GAME_ICONS_FILE = '.github/data/game-icons.txt'
+# Folders under icons/items/ whose UI_T_ files are not checked against the game list (made here, or found by id).
+GAME_NAME_EXEMPT = ('beards', 'cards', 'creator', 'personas')
+# The game's icon folder that settles which category folder an icon belongs in.
+GAME_FOLDER_HINTS = {'Potions': 'potions', 'Ingredients': 'ingredients', 'Plants': 'plants', 'Seeds': 'plants'}
+
 _UNSAFE_NAME = re.compile('[\x00-\x1f\x7f-\x9f  ‪-‮⁦-⁩﻿\ud800-\udfff]')
 _ENTITY = re.compile(r'&(#\d+|#x[0-9a-f]+|[a-z][a-z0-9]*);', re.I)
 _CORE_CHUNKS = {b'VP8X', b'VP8 ', b'VP8L', b'ALPH', b'ICCP'}
@@ -205,3 +212,45 @@ def inspect_webp(data, limits):
     if extra:
         warnings.append('carries extra data chunks (' + ', '.join(extra) + '), strip metadata before submitting')
     return errors, warnings
+
+
+def parse_game_icons(text):
+    """The game icon list as {lower-case name: set of game folders}."""
+    icons = {}
+    for line in text.splitlines():
+        folder, _, name = line.partition('\t')
+        if name:
+            icons.setdefault(name.strip().lower(), set()).add(folder.strip())
+    return icons
+
+
+_COMMENT = re.compile(r'<!--.*?-->', re.S)
+_TICK = r'^\s*[-*]\s*\[[xX]\]\s*\*\*{}'
+
+
+def _line_value(body, label):
+    match = re.search(r'^\s*' + re.escape(label) + r'\s*:(.*)$', body, re.M | re.I)
+    return match.group(1).strip() if match else ''
+
+
+def template_problems(body, added_images):
+    """Problems with the pull request description when it adds images. body is untrusted text; messages never repeat it."""
+    if not added_images:
+        return []
+    text = _COMMENT.sub('', (body or '').replace('\r\n', '\n'))
+    made = re.search(_TICK.format('Made by me'), text, re.M | re.I)
+    game = re.search(_TICK.format('From the game'), text, re.M | re.I)
+    mod = re.search(_TICK.format('From a mod'), text, re.M | re.I)
+    problems = []
+    if not (made or game or mod):
+        problems.append('the description does not say where the images came from: tick Made by me, From the game or From a mod in the template')
+    if not _line_value(text, 'AI tools'):
+        problems.append('the AI tools line is empty: write "None" or which tool made what')
+    if mod and not _line_value(text, 'Mod, source or credit'):
+        problems.append('From a mod is ticked but the mod is not named on the "Mod, source or credit" line')
+    names = [path.rsplit('/', 1)[-1] for path in added_images]
+    if any(name.upper().startswith('UI_T_') for name in names) and not game:
+        problems.append('UI_T_ files are game files: tick From the game, or rename files you made yourself')
+    if any(name.upper().startswith('MOD_') for name in names) and not mod:
+        problems.append('MOD_ files come from a mod: tick From a mod and name it')
+    return problems

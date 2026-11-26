@@ -6,6 +6,7 @@ from the object database. Run this file from a checkout of the base branch.
     python .github/scripts/validate_pr.py --base origin/main --head HEAD
 """
 import argparse
+import json
 import os
 import re
 import sys
@@ -29,10 +30,17 @@ class Report:
         self.warnings = []
 
     def error(self, path, message):
-        self.errors.append((checks.safe(path), message))
+        self.errors.append((label(path), message))
 
     def warn(self, path, message):
-        self.warnings.append((checks.safe(path), message))
+        self.warnings.append((label(path), message))
+
+
+LABELS = ('(pull request)', '(description)')
+
+
+def label(path):
+    return path if path in LABELS else checks.safe(path)
 
 
 def parse_tree(raw):
@@ -126,7 +134,33 @@ def check_names_file(repo, path, sha, head_tree, report):
         report.warn(path, 'keys are not sorted, which makes diffs and merges harder')
 
 
-def validate(repo, base, head):
+def game_icons(repo, base_tree):
+    entry = base_tree.get(checks.GAME_ICONS_FILE)
+    if not entry:
+        return None
+    return checks.parse_game_icons(checks.git(repo, 'cat-file', 'blob', entry[1]).decode('utf-8', 'replace'))
+
+
+def check_new_image(path, sha, base_images, added_shas, known_game, report):
+    """Duplicates of existing or other new images, and UI_T_ names the game does not have."""
+    same = base_images.get(sha) or added_shas.get(sha)
+    if same:
+        report.error(path, f'the same file as {checks.safe(same)}, which is already there: use that URL instead of adding a copy')
+    added_shas.setdefault(sha, path)
+    file_name = path.rsplit('/', 1)[-1]
+    parts = path.split('/')
+    if known_game is None or not file_name.upper().startswith('UI_T_') or len(parts) < 4 or parts[1] != 'items' or parts[2] in checks.GAME_NAME_EXEMPT:
+        return
+    folders = known_game.get(file_name[: -len(checks.IMAGE_EXT)].lower())
+    if not folders:
+        report.error(path, 'UI_T_ means a file from the game, but the game has no icon by this name. Files you made need a name without UI_T_, mod files start with MOD_')
+        return
+    hinted = {checks.GAME_FOLDER_HINTS[f] for f in folders if f in checks.GAME_FOLDER_HINTS}
+    if hinted and parts[2] not in hinted:
+        report.warn(path, f'the game keeps this icon with its {", ".join(sorted(f for f in folders if f in checks.GAME_FOLDER_HINTS))}: it may belong in icons/items/{"/".join(sorted(hinted))}')
+
+
+def validate(repo, base, head, body=None):
     report = Report()
     merge_base = checks.git(repo, 'merge-base', base, head).decode().strip()
     changes = parse_diff(checks.git(repo, 'diff-tree', '-r', '-z', '--no-renames', '--no-ext-diff', merge_base, head))
@@ -134,6 +168,14 @@ def validate(repo, base, head):
     head_tree = parse_tree(checks.git(repo, 'ls-tree', '-r', '-z', '--full-tree', head))
     if len(changes) > MAX_FILES:
         report.error('(pull request)', f'{len(changes)} files changed, the limit is {MAX_FILES}: split it up')
+
+    known_game = game_icons(repo, base_tree)
+    base_images = {}
+    for path, (_mode, sha) in base_tree.items():
+        if path.startswith(checks.IMAGE_ROOT) and path.endswith(checks.IMAGE_EXT):
+            base_images.setdefault(sha, path)
+    added_shas = {}
+    added_images = []
 
     head_lower = {}
     for path in head_tree:
@@ -180,6 +222,8 @@ def validate(repo, base, head):
             if status == 'M' or (existing and existing[1] != sha):
                 report.error(path, 'REPLACES an existing image at a URL games already use. The owner merges exceptions by hand')
             elif status == 'A':
+                added_images.append(path)
+                check_new_image(path, sha, base_images, added_shas, known_game, report)
                 file_name = path.rsplit('/', 1)[-1]
                 if PROJECT_PREFIX.match(file_name):
                     report.warn(path, 'new file with the wy_ prefix, which is reserved for this project')
@@ -203,6 +247,10 @@ def validate(repo, base, head):
                 check_names_file(repo, path, sha, head_tree, report)
         elif not owner_only:
             report.warn(path, 'outside icons/ and names/')
+
+    if body is not None:
+        for problem in checks.template_problems(body, added_images):
+            report.error('(description)', problem)
 
     if total > MAX_TOTAL_BYTES:
         report.error('(pull request)', f'{total} bytes added, the limit is {MAX_TOTAL_BYTES}: split it up')
@@ -237,9 +285,23 @@ def main():
     parser.add_argument('--repo', default='.')
     parser.add_argument('--base', required=True)
     parser.add_argument('--head', required=True)
+    parser.add_argument('--body-file', help='the pull request description, to check the template')
+    parser.add_argument('--event', help='a pull_request event file: its description is checked like --body-file')
+    parser.add_argument('--json', help='also write the report here as JSON')
     args = parser.parse_args()
-    report, count = validate(args.repo, args.base, args.head)
+    body = None
+    if args.body_file:
+        with open(args.body_file, encoding='utf-8', errors='replace') as handle:
+            body = handle.read(200000)
+    elif args.event:
+        with open(args.event, encoding='utf-8') as handle:
+            pull = json.load(handle).get('pull_request') or {}
+        body = str(pull.get('body') or '')[:200000]
+    report, count = validate(args.repo, args.base, args.head, body)
     print_report(report, count)
+    if args.json:
+        with open(args.json, 'w', encoding='utf-8') as out:
+            json.dump({'files': count, 'errors': report.errors, 'warnings': report.warnings}, out)
     return 1 if report.errors else 0
 
 

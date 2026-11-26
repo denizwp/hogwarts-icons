@@ -1,0 +1,58 @@
+name: Review
+
+# Leaves the validation result on the pull request: one comment kept up to date, and a
+# "changes requested" review while there are errors. Runs from the default branch with a
+# write token, so nothing from the pull request is trusted: not the Validate run's output,
+# not its files. It finds the pull request by the commit GitHub reports, fetches that commit
+# as git objects and validates it again with the default branch's own scripts.
+on:
+  workflow_run:
+    workflows: [Validate]
+    types: [completed]
+
+permissions: {}
+
+concurrency:
+  group: review-${{ github.event.workflow_run.head_sha }}
+
+jobs:
+  review:
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+    steps:
+      - name: Check out the default branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Find the pull request
+        id: pr
+        run: |
+          [[ "$HEAD_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::unexpected commit id"; exit 1; }
+          gh api "repos/$REPO/pulls?state=open&per_page=100" --paginate > "$RUNNER_TEMP/pulls.json"
+          python3 -I .github/scripts/post_review.py find --pulls "$RUNNER_TEMP/pulls.json" --sha "$HEAD_SHA" --out "$RUNNER_TEMP/pr" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch the pull request as data
+        if: steps.pr.outputs.number != ''
+        env:
+          NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          git fetch --no-tags --no-recurse-submodules origin "pull/$NUMBER/head"
+          [ "$(git rev-parse FETCH_HEAD)" = "$HEAD_SHA" ] || { echo "The pull request moved on; the newer run reviews it."; echo "stale=1" >> "$GITHUB_ENV"; }
+
+      - name: Validate and leave the result
+        if: steps.pr.outputs.number != '' && env.stale != '1'
+        env:
+          NUMBER: ${{ steps.pr.outputs.number }}
+          BASE_SHA: ${{ steps.pr.outputs.base }}
+        run: |
+          python3 -I .github/scripts/validate_pr.py --base "$BASE_SHA" --head "$HEAD_SHA" --body-file "$RUNNER_TEMP/pr/body.md" --json "$RUNNER_TEMP/report.json" || true
+          python3 -I .github/scripts/post_review.py post --report "$RUNNER_TEMP/report.json" --number "$NUMBER" --sha "$HEAD_SHA" --repo "$REPO"
