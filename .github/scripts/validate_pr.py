@@ -136,9 +136,14 @@ def check_names_file(repo, path, sha, head_tree, report):
 
 def game_icons(repo, base_tree):
     entry = base_tree.get(checks.GAME_ICONS_FILE)
-    if not entry:
-        return None
-    return checks.parse_game_icons(checks.git(repo, 'cat-file', 'blob', entry[1]).decode('utf-8', 'replace'))
+    if entry:
+        return checks.parse_game_icons(checks.git(repo, 'cat-file', 'blob', entry[1]).decode('utf-8', 'replace'))
+    # A pull request based before the list existed: use the list of the checkout that runs this script
+    local = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'game-icons.txt')
+    if os.path.exists(local):
+        with open(local, encoding='utf-8') as handle:
+            return checks.parse_game_icons(handle.read())
+    return None
 
 
 def check_new_image(path, sha, base_images, added_shas, known_game, report):
